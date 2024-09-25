@@ -1,0 +1,63 @@
+class Solution {
+    class Node {
+        Node[] links = new Node[10];
+        public Node() {}
+        void put(char ch, Node node) {
+            links[ch - '0'] = node;
+        }
+        Node get(char ch) {
+            return links[ch - '0'];
+        }
+        boolean containsKey(char ch) {
+            return links[ch - '0'] != null;
+        }
+    }
+
+    class Trie{
+        private Node root;
+        private int lcp = Integer.MIN_VALUE;
+        public Trie(){
+            root = new Node();
+        }
+        void insert(String s) {
+            Node node = root;
+            for(int i = 0; i < s.length(); i++) {
+                char ch = s.charAt(i);
+                if(!node.containsKey(ch)) {
+                    node.put(ch, new Node());
+                }
+                node = node.get(ch);
+            }
+        }
+        int lcp(String word) {
+            Node node = root;
+            int length = 0;
+            for(int i = 0; i < word.length(); i++) {
+                char ch = word.charAt(i);
+                if(node.containsKey(ch)) {
+                    length++;
+                    node = node.get(ch);
+                } else {
+                    break;
+                }
+            }
+            return length;
+        }
+        int lcp() {
+            return lcp;
+        }
+    }
+
+    public int longestCommonPrefix(int[] arr1, int[] arr2) {
+        Trie trie = new Trie();
+        for(int num : arr1) {
+            trie.insert(String.valueOf(num));
+        }
+        int longestCommonPrefix = 0;
+        for(int num : arr2) {
+            int currentCommonPrefix = trie.lcp(String.valueOf(num));
+            longestCommonPrefix = Math.max(longestCommonPrefix, currentCommonPrefix);
+        }
+        return longestCommonPrefix;
+    }
+}
