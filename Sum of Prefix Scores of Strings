@@ -1,0 +1,58 @@
+class Solution {
+    class Node {
+        Node[] links = new Node[26];
+        int prefixCount = 0;
+        public Node() {}
+        boolean containsKey(char ch) {
+            return links[ch - 'a'] != null;
+        }
+        void put(char ch, Node node) {
+            links[ch - 'a'] = node;
+        }
+        Node get(char ch) {
+            return links[ch -'a'];
+        }
+        void increasePrefixCount() {
+            prefixCount++;
+        }
+    }
+    class Trie {
+        private Node root;
+        public Trie() {
+            root = new Node();
+        }
+        void insert(String s) {
+            Node node = root;
+            for(int i = 0; i < s.length(); i++) {
+                char ch = s.charAt(i);
+                if(!node.containsKey(ch)) {
+                    node.put(ch, new Node());
+                }
+                node = node.get(ch);
+                node.increasePrefixCount();
+            }
+        }
+        int sumPrefixScore(String s) {
+            Node node = root;
+            int score = 0;
+            for(int i = 0; i < s.length(); i++) {
+                char ch = s.charAt(i);
+                if(!node.containsKey(ch)) {
+                    break;
+                } 
+                node = node.get(ch);
+                score += node.prefixCount;
+            }
+            return score;
+        }
+    }
+    public int[] sumPrefixScores(String[] words) {
+        Trie trie = new Trie();
+        for(String word : words)    trie.insert(word);
+        int[] ans = new int[words.length];
+        for(int i = 0; i < words.length; i++) {
+            ans[i] = trie.sumPrefixScore(words[i]);
+        }
+        return ans;
+    }
+}

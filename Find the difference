@@ -1,0 +1,10 @@
+class Solution {
+    public char findTheDifference(String s, String t) {
+        char result = 0;
+        for(char res:s.toCharArray())
+            result ^= res;
+        for(char res1 : t.toCharArray())
+            result ^= res1;
+        return result;
+    }
+}
