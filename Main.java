@@ -142,6 +142,20 @@ public class Main{
     }
     //2070. Most Beautiful Item for Each Query
     public int[] maximumBeauty(int[][] items, int[] queries) {
+        int findBeauty(int[][] items, int target) {
+            int l = 0, r = items.length - 1;
+            int res = -1;
+            while (l <= r) {
+                int mid = (r - l) / 2 + l;
+                if (items[mid][0] > target) {
+                    r = mid - 1;
+                } else {
+                    res = mid;
+                    l = mid + 1;
+                }
+            }
+            return (res == -1) ? 0 : items[res][1];
+        }
         int n = items.length;
         int m = queries.length;
         Arrays.sort(items, (x, y) -> Integer.compare(x[0], y[0]));
@@ -155,19 +169,5 @@ public class Main{
             ans[i] = findBeauty(items, queries[i]);
         }
         return ans;
-    }
-    private int findBeauty(int[][] items, int target) {
-        int l = 0, r = items.length - 1;
-        int res = -1;
-        while (l <= r) {
-            int mid = (r - l) / 2 + l;
-            if (items[mid][0] > target) {
-                r = mid - 1;
-            } else {
-                res = mid;
-                l = mid + 1;
-            }
-        }
-        return (res == -1) ? 0 : items[res][1];
     }
 }
