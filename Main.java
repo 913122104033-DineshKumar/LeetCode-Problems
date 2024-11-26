@@ -170,4 +170,23 @@ public class Main{
         }
         return ans;
     }
+    //2924. Find Champion II
+    public int findChampion(int n, int[][] edges) {
+        int[] teams = new int[n];
+        Arrays.fill(teams, 0);
+        for(int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            teams[v] = -1;
+        }
+        int strongTeam = 0;
+        int cnt = 0;
+        for (int i = 0; i < teams.length; i++) {
+            if (teams[i] == 0) {
+                cnt++;
+                strongTeam = i;
+            }
+        }
+        return (cnt == 1) ? strongTeam : -1;
+    }
 }
