@@ -1,5 +1,12 @@
 public class Graph {
     //Dijstra Algorithm Implementation
+    class iPair {
+        int first, second;
+        public iPair(int first, int second) {
+            this.first = first;
+            this.second = second;
+        }
+    }
     public ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
         PriorityQueue<iPair> minPq = new PriorityQueue<>((x, y) -> x.second - y.second);
         int[] dist = new int[adj.size()];
