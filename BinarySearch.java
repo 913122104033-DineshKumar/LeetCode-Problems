@@ -23,6 +23,7 @@ public class BinarySearch {
         }
         return -1;
     }
+    //Coding Ninja Find Floor and Ceil for a given integer.
     public static int[] getFloorAndCeil(int[] a, int n, int x) {
         int getCeil(int[] a, int n, int x) {
             int low = 0, high = n - 1;
