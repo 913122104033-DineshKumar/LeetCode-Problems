@@ -1,6 +1,6 @@
 public class BinarySearch {
     //33. Search in Rotated Sorted Array
-    public int search(int[] nums, int x) {
+    public int searchI(int[] nums, int x) {
         int low = 0, high = nums.length - 1;
         while (low <= high) {
             int mid = (low + high) / 2;
@@ -55,5 +55,32 @@ public class BinarySearch {
         int floor = getFloor(a, n, x);
         int ceil = getCeil(a, n, x);
         return new int[]{ floor, ceil };
+    }
+    //81. Search in Rotated Sorted Array II
+    public boolean searchII(int[] nums, int x) {
+        int low = 0, high = nums.length - 1;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (nums[mid] == x) {
+                return true;
+            }
+            if (nums[low] == nums[mid] && nums[mid] == nums[high]) {
+                low = low + 1;
+                high = high - 1;
+            } else if (nums[low] <= nums[mid]) {
+                if (nums[low] <= x && x <= nums[mid]) {
+                    high = mid - 1;
+                } else {
+                    low = mid + 1;
+                }
+            } else {
+                if (nums[mid] <= x && x <= nums[high]) {
+                    low = mid + 1;
+                } else {
+                    high = mid - 1;
+                }
+            }
+        }
+        return false;
     }
 }
