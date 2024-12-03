@@ -221,4 +221,30 @@ public class BinarySearch {
         }
         return -1;
     }
+    //875. Koko Eating Bananas
+    public static int minEatingSpeed(int[] piles, int h) {
+        boolean isFinished(int[] piles, int mid, int h) {
+            long totalHours = 0;
+            for (int pile : piles) {
+                totalHours += Math.ceil(pile + mid - 1) / mid;
+                if (totalHours > h) {
+                    return false;
+               }
+            }
+            return totalHours <= h;
+        }
+        int low = 0, high = 0;
+        for (int pile : piles) {
+            high = Math.max(high, pile);
+        }        
+        while(low <= high) {
+            int mid = (low + high) / 2;
+            if (isFinished(piles, mid, h)) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return low;
+    }
 }
