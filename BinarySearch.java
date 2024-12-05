@@ -223,23 +223,59 @@ public class BinarySearch {
     }
     //875. Koko Eating Bananas
     public static int minEatingSpeed(int[] piles, int h) {
+        int low = 0, high = 0;
         boolean isFinished(int[] piles, int mid, int h) {
             long totalHours = 0;
             for (int pile : piles) {
                 totalHours += Math.ceil(pile + mid - 1) / mid;
                 if (totalHours > h) {
                     return false;
-               }
+            }
             }
             return totalHours <= h;
         }
-        int low = 0, high = 0;
         for (int pile : piles) {
             high = Math.max(high, pile);
         }        
         while(low <= high) {
             int mid = (low + high) / 2;
             if (isFinished(piles, mid, h)) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return low;
+    }
+    //Mininum Days to make M Bouquets
+    public int minDays(int[] days, int m, int k) {
+        int n = days.length;
+        if ((long) (m * k) > n) {
+            return -1;
+        }
+        boolean isReady(int[] days, int m, int k, int mid) {
+            int bouque = 0, cnt = 0;
+            for (int i = 0; i < days.length; i++) {
+                if (days[i] <= mid) {
+                    cnt++;
+                } else {
+                    bouque += (cnt / k);
+                    cnt = 0;
+                }
+                if (bouque >= m) {
+                    return true;
+                }
+            }
+            bouque += (cnt / k);
+            return bouque >= m;
+        }
+        int low = 0, high = 0;
+        for (int day : days) {
+            high = Math.max(high, day);
+        }
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (isReady(days, m, k, mid)) {
                 high = mid - 1;
             } else {
                 low = mid + 1;
