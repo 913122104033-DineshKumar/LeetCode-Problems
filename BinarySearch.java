@@ -283,4 +283,33 @@ public class BinarySearch {
         }
         return low;
     }
+    //Capacity To Ship Packages Within D Days
+    public static int leastWeightCapacity(int[] weights, int d) {
+        boolean noOfDays(int[] weight, int cap, int d) {
+            int days = 1, load = 0;
+            for (int w : weight) {
+                if (load + w > cap) {
+                    ++days;
+                    load = w;
+                } else {
+                    load += w;
+                }
+            } 
+            return days <= d;
+        }   
+        int low = Integer.MIN_VALUE, high = 0;
+        for(int w : weights) {
+            low = Math.max(low, w);
+            high += w;
+        }
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (noOfDays(weights, mid, d)) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return low;
+    }
 }
