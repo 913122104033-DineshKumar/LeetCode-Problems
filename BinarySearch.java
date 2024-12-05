@@ -324,6 +324,6 @@ public class BinarySearch {
                 high = mid - 1;
             }
         }
-        return low + k;
+        return low + k; // high + 1 + k || arr[high] + k - (high - arr[high] + 1)
     }
 }
