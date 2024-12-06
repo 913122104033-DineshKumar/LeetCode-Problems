@@ -326,4 +326,43 @@ public class BinarySearch {
         }
         return low + k; // high + 1 + k || arr[high] + k - (high - arr[high] + 1)
     }
+    //2554. Maximum Number of Integers to Choose From a Range I
+    public int maxCount(int[] banned, int high, int maxSum) {
+        boolean isInLimit(Set<Integer> banned, int limit, int x) {
+            int sum = 0;
+            for (int i = 1; i <= limit; i++) {
+                if (!banned.contains(i)) {
+                sum += i;
+                } 
+                if (sum > x) {
+                    return false;
+                }
+            }   
+            return true;
+        }
+        int noOfElements(Set<Integer> banned, int limit) {
+            int cnt = 0;
+            for (int i = 1; i <= limit; i++) {
+                if (!banned.contains(i)) {
+                    cnt++;
+                }
+            }
+            return cnt;
+        }
+        Set<Integer> bans = new HashSet<>();
+        for (int ban : banned) {
+            bans.add(ban);
+        }
+        int low = 1;
+        int rangeLimit = 0;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (isInLimit(bans, mid, maxSum)) {
+                low = mid + 1;
+            } else {
+                high = mid -1;
+            }
+        }
+        return noOfElements(bans, high);
+    }
 }
