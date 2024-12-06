@@ -365,4 +365,29 @@ public class BinarySearch {
         }
         return noOfElements(bans, high);
     }
+    // Aggressive Cows
+    public static int aggressiveCows(int []stalls, int k) {
+        boolean canBePlaced(int[] stalls, int dist, int k) {
+            int cowCnt = 1;
+            int last = stalls[0];
+            for (int i = 1; i < stalls.length; i++) {
+                if (stalls[i] - last >= dist) {
+                    ++cowCnt;
+                    last = stalls[i];
+                }
+            }
+            return cowCnt >= k;
+        }
+        Arrays.sort(stalls);
+        int low = 1,high = stalls[stalls.length - 1] - stalls[0];
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (canBePlaced(stalls, mid, k)) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return high;
+    }
 }
