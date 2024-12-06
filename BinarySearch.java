@@ -390,4 +390,36 @@ public class BinarySearch {
         }
         return high;
     }
+    //Allocate Books
+    public static int findPages(ArrayList<Integer> arr, int n, int m) {
+        if (m > n) {
+            return -1;
+        }
+        boolean canGiveBooks(ArrayList<Integer> books, int pageLimit, int m) {
+            int studentCnt = 0, pageCnt = 0;
+            for (int pages : books) {
+                if (pageCnt + pages <= pageLimit) {
+                    pageCnt += pages;
+                } else {
+                    studentCnt++;
+                    pageCnt = pages;
+                }
+            }
+            return studentCnt < m;
+        }
+        int low = 1, high = 0;
+        for (int pages : arr) {
+            low = Math.max(low, pages);
+            high += pages;
+        }
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (!canGiveBooks(arr, mid, m)) {
+                low = mid + 1;
+            } else {
+                high = mid -1;
+            }
+        }
+        return low;
+    }
 }
