@@ -422,4 +422,30 @@ public class BinarySearch {
         }
         return low;
     }
+    //1760. Minimum Limit of Balls in a Bag
+    public int minimumSize(int[] nums, int maxOperations) {
+        boolean canDistribute(int[] nums, int penalty, int maxOperations) {
+            int operations = 0;
+            for (int num : nums) {
+                operations += (num - 1) / penalty;
+            }
+            return operations <= maxOperations;
+        }
+        int low = 1, high = 0;
+        for (int num : nums) {
+            high = Math.max(high, num);
+        }
+        int res = high;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            int rem = high - mid;
+            if (canDistribute(nums, mid, maxOperations)) {
+                res = mid;
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return res;
+    }
 }
