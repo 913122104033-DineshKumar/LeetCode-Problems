@@ -488,4 +488,22 @@ public class BinarySearch {
         }
         return 0;
     }
+    //74. Search a 2D Matrix
+    public boolean searchMatrix(int[][] matrix, int x) {
+        int n = matrix.length, m = matrix[0].length;
+        int low = 0, high = n * m - 1;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            int row = mid / m;
+            int col = mid % m;
+            if (matrix[row][col] == x) {
+                return true;
+            } else if (matrix[row][col] < x) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return false;
+    }
 }
