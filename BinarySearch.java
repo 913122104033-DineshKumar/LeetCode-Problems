@@ -506,4 +506,30 @@ public class BinarySearch {
         }
         return false;
     }
+    //Find A Peak Element
+    public static int[] findPeakGrid(int [][]g){
+        int n = g.length, m = g[0].length;
+        int low = 0, high = m - 1;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            int max = Integer.MIN_VALUE;
+            int i = 1;
+            for (int j = 0; j < n; j++) {
+                if (max < g[j][mid]) {
+                    i = j;
+                    max = g[j][mid];
+                }
+            }
+            int left = (mid - 1 >= 0) ? g[i][mid - 1] : Integer.MIN_VALUE;
+            int right = (mid + 1 < m) ? g[i][mid + 1] : Integer.MIN_VALUE;
+            if (g[i][mid] > left && g[i][mid] > right) {
+                return new int[]{ i, mid };
+            } else if ((mid - 1 >= 0 && g[i][mid - 1] > g[i][mid])) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return new int[]{ -1, -1 };
+    }
 }
