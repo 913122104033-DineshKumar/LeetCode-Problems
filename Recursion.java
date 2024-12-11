@@ -19,4 +19,15 @@ public class Recursion {
         }
         return fibanocci(i - 1) + fibanocci(i - 2);
     }
+    public static void subsequence(int idx, List<Integer> nums, int n, int[] arr) {
+        if (idx == n) {
+            for (int num : nums) {
+                System.out.println(num + " ");
+            }
+            return;
+        }
+        nums.add(arr[idx]);
+        subsequence(idx + 1, nums, n, arr);
+        nums.remove(arr[idx]);
+    }
 }
