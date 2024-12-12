@@ -30,4 +30,23 @@ public class Recursion {
         subsequence(idx + 1, nums, n, arr);
         nums.remove(arr[idx]);
     }
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        void recursion(int idx, int[] candidates, int x, List<List<Integer>> ans, List<Integer> list) {
+            if (idx == candidates.length) {
+                if (x == 0) {
+                    ans.add(new ArrayList<>(list));
+                }
+                return;
+            }       
+            if (candidates[idx] <= x) {
+                list.add(candidates[idx]);
+                recursion(idx, candidates, x - candidates[idx], ans, list);
+                list.remove(list.size() - 1);
+            }
+            recursion(idx + 1, candidates, x, ans, list);                          
+        }
+        List<List<Integer>> ans = new ArrayList<>();
+        recursion(0, candidates, target, ans, new ArrayList<>());
+        return ans;
+    }
 }
