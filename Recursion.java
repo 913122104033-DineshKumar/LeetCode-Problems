@@ -79,4 +79,23 @@ public class Recursion {
         findCombinations(0, new ArrayList<>(), target, ans, candidates);
         return ans;
     }
+    //Combination Sum III
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        void findCombinations(int cur, List<Integer> ds, int target, int k, List<List<Integer>> ans) {
+            if (target == 0 && ds.size() == k) {
+                ans.add(new ArrayList<>(ds));
+                return;
+            }
+            if (cur > 9 || ds.size() > k || cur > target) {
+                return;
+            }
+            ds.add(cur);
+            findCombinations(cur + 1, ds, target - cur, k, ans);
+            ds.remove(ds.size() - 1);
+            findCombinations(cur + 1, ds, target, k, ans);
+        }
+        List<List<Integer>> ans = new ArrayList<>();
+        findCombinations(1, new ArrayList<>(), n, k, ans);
+        return ans;
+    }
 }
