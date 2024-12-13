@@ -154,4 +154,30 @@ public class Recursion {
         permutate(nums, new ArrayList<>(), ans, marked);
         return ans;
     }
+    //Permutations Optimal Solution
+    public List<List<Integer>> permutation(int[] nums) {
+        void permutate(int idx, int[] nums, List<List<Integer>> ans) {
+            if (idx == nums.length) {
+                List<Integer> ds = new ArrayList<>();
+                for (int num : nums) {
+                    ds.add(num);
+                }
+                ans.add(new ArrayList<>(ds));
+                return;
+            }
+            for (int i = idx; i < nums.length; i++) {
+                swap(i, idx, nums);
+                permutate(idx + 1, nums, ans);
+                swap(i, idx, nums);
+            }
+        }
+        void swap(int cur, int next, int[] nums) {
+            int temp = nums[cur];
+            nums[cur] = nums[next];
+            nums[next] = temp;
+        }
+        List<List<Integer>> ans = new ArrayList<>();
+        permutate(0, nums, ans);
+        return ans;
+    }
 }
