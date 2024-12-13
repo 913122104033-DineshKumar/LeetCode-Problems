@@ -98,4 +98,20 @@ public class Recursion {
         findCombinations(1, new ArrayList<>(), n, k, ans);
         return ans;
     }
+    //Subsets
+    public List<List<Integer>> subsets(int[] nums) {
+        void findSubsets(int idx, List<Integer> ds, List<List<Integer>> ans, int[] nums) {
+            if (idx == nums.length) {
+                ans.add(new ArrayList<>(ds));
+                return;
+            }
+            ds.add(nums[idx]);
+            findSubsets(idx + 1, ds, ans, nums);
+            ds.remove(ds.size() - 1);
+            findSubsets(idx + 1, ds, ans, nums);
+        }
+        List<List<Integer>> ans = new ArrayList<>();
+        findSubsets(0, new ArrayList<>(), ans, nums);
+        return ans;
+    }
 }
