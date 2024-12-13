@@ -132,4 +132,26 @@ public class Recursion {
         findSubsets(0, new ArrayList<>(), ans, nums);
         return ans;
     }
+    //Permutation Brute Force Approach
+    public List<List<Integer>> permute(int[] nums) {
+        void permutate(int[] nums, List<Integer> ds, List<List<Integer>> ans, boolean[] marked) {
+            if (ds.size() == nums.length) {
+                ans.add(new ArrayList<>(ds));
+                return;
+            }   
+            for (int i = 0; i < nums.length; i++) {
+                if (!marked[i]) {
+                    ds.add(nums[i]);
+                    marked[i] = true;
+                    permutate(nums, ds, ans, marked);
+                    ds.remove(ds.size() - 1);
+                    marked[i] = false;
+                }
+            }   
+        }
+        List<List<Integer>> ans = new ArrayList<>();
+        boolean[] marked = new boolean[nums.length];
+        permutate(nums, new ArrayList<>(), ans, marked);
+        return ans;
+    }
 }
