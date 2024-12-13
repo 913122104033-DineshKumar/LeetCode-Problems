@@ -98,7 +98,7 @@ public class Recursion {
         findCombinations(1, new ArrayList<>(), n, k, ans);
         return ans;
     }
-    //Subsets
+    //Subsets I
     public List<List<Integer>> subsets(int[] nums) {
         void findSubsets(int idx, List<Integer> ds, List<List<Integer>> ans, int[] nums) {
             if (idx == nums.length) {
@@ -110,6 +110,24 @@ public class Recursion {
             ds.remove(ds.size() - 1);
             findSubsets(idx + 1, ds, ans, nums);
         }
+        List<List<Integer>> ans = new ArrayList<>();
+        findSubsets(0, new ArrayList<>(), ans, nums);
+        return ans;
+    }
+    //Subsets II
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        void findSubsets(int idx, List<Integer> ds, List<List<Integer>> ans, int[] nums) {
+            ans.add(new ArrayList<>(ds));
+            for (int i = idx; i < nums.length; i++) {
+                if (i > idx && nums[i] == nums[i - 1]) {
+                    continue;
+                }   
+                ds.add(nums[i]);
+                findSubsets(i + 1, ds, ans, nums);
+                ds.remove(ds.size() - 1);
+            }
+        }
+        Arrays.sort(nums);
         List<List<Integer>> ans = new ArrayList<>();
         findSubsets(0, new ArrayList<>(), ans, nums);
         return ans;
