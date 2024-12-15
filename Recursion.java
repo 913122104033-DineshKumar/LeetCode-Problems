@@ -219,4 +219,43 @@ public class Recursion {
         }
         solve(board, 9);
     }
+    //N Queens Problem
+    public List<List<String>> solveNQueens(int n) {
+        void solve(int col, List<List<String>> ans, int n, boolean[] leftSide, boolean[] lowerDiagonal, 
+                        boolean[] upperDiagonal, char[][] board) {
+            if (col == n) {
+                List<String> ds = new ArrayList<>();
+                for (char[] row : board) {
+                    String s = new String(row);
+                    ds.add(s);
+                }
+                ans.add(new ArrayList<>(ds));
+                return;
+            } 
+            for (int row = 0; row < n; row++) {
+                int upperIdx = (n - 1) + (col - row);
+                if (!leftSide[row] && !lowerDiagonal[row + col] && !upperDiagonal[upperIdx]) {
+                    board[row][col] = 'Q';
+                    leftSide[row] = true;
+                    lowerDiagonal[row + col] = true;
+                    upperDiagonal[upperIdx] = true;
+                    solve(col + 1, ans, n, leftSide, lowerDiagonal, upperDiagonal, board);
+                    board[row][col] = '.';
+                    leftSide[row] = false;
+                    lowerDiagonal[row + col] = false;
+                    upperDiagonal[upperIdx] = false;
+                }
+            }                   
+        }
+        char[][] board = new char[n][n];
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(board[i], '.');
+        }
+        boolean[] ls = new boolean[n];
+        boolean[] ld = new boolean[2 * n - 1];
+        boolean[] ud = new boolean[2 * n - 1];
+        List<List<String>> ans = new ArrayList<>();
+        solve(0, ans, n, ls, ld, ud, board);
+        return ans;
+    }
 }
