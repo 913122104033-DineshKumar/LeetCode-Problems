@@ -258,4 +258,43 @@ public class Recursion {
         solve(0, ans, n, ls, ld, ud, board);
         return ans;
     }
+    //M Coloring Graph
+    boolean graphColoring(int n, List<int[]> edges, int m) {
+        boolean coloring(int vertex, int colors, Map<Integer, List<Integer>> G, int n, int[] colored) {
+            if (vertex == n) {
+                return true;
+            }
+            for (int color = 1; color <= colors; color++) {
+                if (canColor(G, color, vertex, colored)) {
+                    colored[vertex] = color;
+                    if (coloring(vertex + 1, colors, G, n, colored)) {
+                        return true;
+                    }
+                    colored[vertex] = 0;
+                }
+            }
+            return false;
+        }
+        boolean canColor(Map<Integer, List<Integer>> G, int color, int vertex, int[] colored) {
+            for (int neighbour : G.get(vertex)) {
+                if (colored[neighbour] == color) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            graph.put(i, new ArrayList<>());
+        }
+        for (int[] link : edges) {
+            int u = link[0];
+            int v = link[1];
+            graph.get(u).add(v);
+            graph.get(v).add(u);
+        }
+        int[] colored = new int[n];
+        Arrays.fill(colored, 0);
+        return coloring(0, m, graph, n, colored);
+    }
 }
