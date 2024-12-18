@@ -297,4 +297,31 @@ public class Recursion {
         Arrays.fill(colored, 0);
         return coloring(0, m, graph, n, colored);
     }
+    //Palindrome Partioning
+    public List<List<String>> partition(String s) {
+        void partioning(int idx, String s, List<String> ds, List<List<String>> ans) {
+            if (idx == s.length()) {
+                ans.add(new ArrayList<>(ds));
+                return;
+            }
+            for (int i = idx; i < s.length(); ++i) {
+                if (isPalindrome(s, idx, i)) {
+                    ds.add(s.substring(idx, i + 1));
+                    partioning(i + 1, s, ds, ans);
+                    ds.remove(ds.size() - 1);
+                }
+            }
+        }
+        boolean isPalindrome(String s, int left, int right) {
+            while (left <= right) {
+                if (s.charAt(left++) != s.charAt(right--)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        List<List<String>> ans = new ArrayList<>();
+        partioning(0, s, new ArrayList<>(), ans);
+        return ans;
+    }
 }
