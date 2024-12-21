@@ -326,7 +326,7 @@ public class Recursion {
     }
     //Rat in the Maze
     public ArrayList<String> findPath(ArrayList<ArrayList<Integer>> mat) {
-        private void path(int row, int col, ArrayList<ArrayList<Integer>> maze, int n, 
+        void path(int row, int col, ArrayList<ArrayList<Integer>> maze, int n, 
                         String move, ArrayList<String> ans, boolean[][] visited) {
             if (row == n - 1 && col == n - 1) {
                 ans.add(move);
@@ -385,5 +385,73 @@ public class Recursion {
             fact /= sb.length();
         }
         return ans;
+    }
+    //Merge Sort
+    public void mergeSort(int[] arr, int n) {
+        void mSort(int[] arr, int low, int high) {
+    		if (low >= high) {
+	    		return;
+		    }
+    		int mid = (low + high) / 2;
+	    	mSort(arr, low, mid);
+		    mSort(arr, mid + 1, high);
+		    merge(arr, low, mid, high);
+	    }
+        void merge(int[] nums, int low, int mid, int high) {
+    		int l = low, r = mid + 1;
+	    	int[] temp = new int[high - low + 1];
+		    int idx = 0;
+    		while (l <= mid && r <= high) {
+	    		if (nums[l] <= nums[r]) {
+		    		temp[idx++] = nums[l];
+			    	l++;
+			    } else {
+    				temp[idx++] = nums[r];
+	    			r++;
+		    	}
+		    }   
+    		while (l <= mid) {
+	    		temp[idx++] = nums[l++];
+		    }
+    		while (r <= high) {
+	    		temp[idx++] = nums[r++];
+		    }
+    		for (int i = low; i <= high; i++) {
+	    		nums[i] = temp[i - low];
+		    }
+	    }
+		mSort(arr, 0, n - 1);
+	}
+    //Quick Sort
+    public List<Integer> quickSort(List<Integer> arr) {
+        void quickSort(List<Integer> nums, int low, int high) {
+            if (low < high) {
+                int partitionIndex = partition(nums, low, high);
+                quickSort(nums, low, partitionIndex - 1);
+                quickSort(nums, partitionIndex + 1, high);
+            }
+        }
+        int partition(List<Integer> nums, int low, int high) {
+            int i = low, j = high, pivot = nums.get(i);
+            while (i < j) {
+                while (i <= high && pivot >= nums.get(i)) {
+                    i++;
+                }
+                while (j >= low && pivot < nums.get(j)) {
+                    j--;
+                }
+                if (i < j) {
+                    int temp = nums.get(i);
+                    nums.set(i, nums.get(j));
+                    nums.set(j, temp);
+                }
+            }
+            nums.set(low, nums.get(j));
+            nums.set(j, pivot);
+            return j; 
+        }
+        int low = 0, high = arr.size() - 1;
+        quickSort(arr, low, high);
+        return arr;
     }
 }
