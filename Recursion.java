@@ -324,4 +324,66 @@ public class Recursion {
         partioning(0, s, new ArrayList<>(), ans);
         return ans;
     }
+    //Rat in the Maze
+    public ArrayList<String> findPath(ArrayList<ArrayList<Integer>> mat) {
+        private void path(int row, int col, ArrayList<ArrayList<Integer>> maze, int n, 
+                        String move, ArrayList<String> ans, boolean[][] visited) {
+            if (row == n - 1 && col == n - 1) {
+                ans.add(move);
+                return;
+            }
+            if (row + 1 < n && !visited[row + 1][col] && maze.get(row + 1).get(col) == 1) {
+                visited[row + 1][col] = true;
+                path(row + 1, col, maze, n, move + 'D', ans, visited);
+                visited[row + 1][col] = false;
+            }
+            if (col - 1 >= 0 && !visited[row][col - 1] && maze.get(row).get(col - 1) == 1) {
+                visited[row][col - 1] = true;
+                path(row, col - 1, maze, n, move + 'L', ans, visited);
+                visited[row][col - 1] = false;
+            }
+            if (col + 1 < n && !visited[row][col + 1] && maze.get(row).get(col + 1) == 1) {
+                visited[row][col + 1] = true;
+                path(row, col + 1, maze, n, move + 'R', ans, visited);
+                visited[row][col + 1] = false;
+            }
+            if (row - 1 >= 0 && !visited[row - 1][col] && maze.get(row - 1).get(col) == 1) {
+                visited[row - 1][col] = true;
+                path(row - 1, col, maze, n, move + 'U', ans, visited);
+                visited[row - 1][col] = false;
+            }
+        }
+        int n = mat.size();
+        ArrayList<String> ans = new ArrayList<>();
+        boolean[][] visited = new boolean[n][n];
+        visited[0][0] = true;
+        if (mat.get(0).get(0) == 1) {
+            path(0, 0, mat, n, "", ans, visited);
+        }
+        return ans;
+    }
+    //Kth Permutation Sequence
+    public String getPermutation(int n, int k) {
+        StringBuilder sb = new StringBuilder();
+        int fact = 1;
+        for (int i = 1; i <= n; i++) {
+            if (i < n) {
+                fact *= i;
+            }
+            sb.append(i);
+        }
+        k--;
+        String ans = "";
+        while (true) {
+            int block = k / fact;
+            ans += sb.charAt(block);
+            sb.delete(block, block + 1);
+            if (sb.isEmpty()) {
+                break;
+            }
+            k %= fact;
+            fact /= sb.length();
+        }
+        return ans;
+    }
 }
