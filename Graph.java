@@ -1,13 +1,33 @@
 public class Graph {
-    //Dijstra Algorithm Implementation
-    class iPair {
-        int first, second;
-        public iPair(int first, int second) {
-            this.first = first;
-            this.second = second;
+    //Breadth First Search
+    public ArrayList<Integer> bfsOfGraph(int V, ArrayList<ArrayList<Integer>> adj) {
+        Queue<Integer> queue = new LinkedList<>();
+        boolean[] visited = new boolean[adj.size()];
+        ArrayList<Integer> ans = new ArrayList<>();
+        queue.add(0);
+        ans.add(0);
+        visited[0] = true;
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            for (int neighbour : adj.get(current)) {
+               if (!visited[neighbour]) {
+                   queue.add(neighbour);
+                   ans.add(neighbour);
+                   visited[neighbour] = true;
+               } 
+            }  
         }
+        return ans;
     }
+    //Dijstra Algorithm Implementation
     public ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
+        class iPair {
+            int first, second;
+            public iPair(int first, int second) {
+                this.first = first;
+                this.second = second;
+            }
+        }
         PriorityQueue<iPair> minPq = new PriorityQueue<>((x, y) -> x.second - y.second);
         int[] dist = new int[adj.size()];
         Arrays.fill(dist, Integer.MAX_VALUE);
