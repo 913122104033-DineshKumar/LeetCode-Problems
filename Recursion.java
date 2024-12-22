@@ -454,4 +454,43 @@ public class Recursion {
         quickSort(arr, low, high);
         return arr;
     }
+    //Count Inversion in an Arrays
+    public int numberOfInversions(int []a, int n) {
+        int mergeSort(int[] a, int low, int high) {
+            int cnt = 0;
+            if (low >= high) {
+                return cnt;
+            }
+            int mid  = (low + high) / 2;
+            cnt += mergeSort(a, low, mid);
+            cnt += mergeSort(a, mid + 1, high);
+            cnt += merge(a, low, mid, high);
+            return cnt;
+        }
+        int merge(int[] a, int low, int mid, int high) {
+            int cnt = 0;
+            int l = low, r = mid + 1;
+            int[] temp = new int[high - low + 1];
+            int idx = 0;
+            while (l <= mid && r <= high) {
+                if (a[l] <= a[r]) {
+                    temp[idx++] = a[l++];
+                } else {
+                    cnt += mid - l + 1;
+                    temp[idx++] = a[r++];
+                }
+            }
+            while (l <= mid) {
+                temp[idx++] = a[l++];
+            }
+            while (r <= high) {
+                temp[idx++] = a[r++];
+            }
+            for (int i = low; i <= high; i++) {
+                a[i] = temp[i - low];
+            }
+            return cnt;
+        }
+        return mergeSort(a, 0, n - 1);
+    }
 }
