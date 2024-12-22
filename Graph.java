@@ -19,6 +19,27 @@ public class Graph {
         }
         return ans;
     }
+    //Depth First Search
+    public ArrayList<Integer> dfsOfGraph(ArrayList<ArrayList<Integer>> adj) {
+        void dfs(int current, ArrayList<ArrayList<Integer>> adj, boolean[] visited, ArrayList<Integer> ans) {
+            if (adj.get(current).size() == 0) {
+                return;
+            }
+            for (int neighbour : adj.get(current)) {
+                if (!visited[neighbour]) {
+                    ans.add(neighbour);
+                    visited[neighbour] = true;
+                    dfs(neighbour, adj, visited, ans);
+                }
+            }   
+        }
+        boolean[] visited = new boolean[adj.size()];
+        ArrayList<Integer> ans = new ArrayList<>();
+        ans.add(0);
+        visited[0] = true;
+        dfs(0, adj, visited, ans);
+        return ans;
+    }
     //Dijstra Algorithm Implementation
     public ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
         class iPair {
