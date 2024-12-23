@@ -114,6 +114,56 @@ public class Graph {
         dfs(sr, sc, image[sr][sc], n, m, newColor, ans, image, directions);
         return ans;
     }
+    //Rotten Oranges
+    public int orangesRotting(int[][] mat) {
+        class Pair {
+            int row, col, time;
+            public Pair(int row, int col, int time) {
+                this.row = row;
+                this.col = col;
+                this.time = time;
+            }
+        }
+        int n = mat.length;
+        int m = mat[0].length;
+        int fresh = 0;
+        Queue<Pair> queue = new LinkedList<>();
+        int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }};
+        int[][] visited = new int[n][m];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (mat[i][j] == 2) {
+                    queue.add(new Pair(i ,j, 0));
+                    visited[i][j] = 2;
+                } else {
+                    visited[i][j] = 0;
+                }  
+                if (mat[i][j] == 1) {
+                    fresh++;
+                }
+            }
+        }
+        int cnt = 0;
+        int time = 0;
+        while (!queue.isEmpty()) {
+            Pair pair = queue.poll();
+            time = Math.max(time, pair.time);
+            for (int[] direction : directions) {
+                int nrow = direction[0] + pair.row;
+                int ncol = direction[1] + pair.col;
+                if (nrow >= 0 && nrow < n && ncol >= 0 && ncol < m 
+                    && mat[nrow][ncol] == 1 && visited[nrow][ncol] == 0) {
+                    visited[nrow][ncol] = 1;
+                    queue.add(new Pair(nrow, ncol, pair.time + 1));
+                    cnt++;
+                }
+            }
+        }
+        if (cnt != fresh) {
+            return -1;
+        }
+        return time;
+    }
     //Dijstra Algorithm Implementation
     public ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
         class iPair {
