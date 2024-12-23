@@ -40,6 +40,27 @@ public class Graph {
         dfs(0, adj, visited, ans);
         return ans;
     }
+    //Number Of Provinces
+    int numProvinces(ArrayList<ArrayList<Integer>> adj, int V) {
+        void dfs(int node, List<ArrayList<Integer>> adj, boolean[] visited, int V) {
+            for (int i = 0; i < V; i++) {
+                if (adj.get(node).get(i) == 1 && !visited[i]) {
+                    visited[i] = true;
+                    dfs(i, adj, visited, V);
+                }
+            }
+        }
+        boolean[] visited = new boolean[V];
+        int ans = 0;
+        for (int node = 0; node < V; node++) {
+            if (!visited[node]) {
+                visited[node] = true;
+                ans++;
+                dfs(node, adj, visited, V);
+            }
+        }
+        return ans;
+    }
     //Dijstra Algorithm Implementation
     public ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
         class iPair {
