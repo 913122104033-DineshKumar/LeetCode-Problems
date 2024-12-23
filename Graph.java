@@ -90,6 +90,30 @@ public class Graph {
         }
         return islands;
     }
+    //Flood Fill Algorithm
+    public int[][] floodFill(int[][] image, int sr, int sc, int newColor)
+    {
+        void dfs(int row, int col, int initialColor, int n, int m, int newColor, 
+        int[][] ans, 
+        int[][] image, 
+        int[][] directions) {
+            ans[row][col] = newColor;
+            for (int[] direction : directions) {
+                int nRow = direction[0] + row;
+                int nCol = direction[1] + col;
+                if (nRow >= 0 && nRow < n && nCol >= 0 && nCol < m 
+                    && image[nRow][nCol] == initialColor && ans[nRow][nCol] != newColor) {
+                    dfs(nRow, nCol, initialColor, n, m, newColor, ans, 
+                        image, directions);  
+                }
+            }
+        }
+        int n = image.length, m = image[0].length;
+        int[][] ans = image;
+        int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, 1 }, { 0, -1 } };
+        dfs(sr, sc, image[sr][sc], n, m, newColor, ans, image, directions);
+        return ans;
+    }
     //Dijstra Algorithm Implementation
     public ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
         class iPair {
