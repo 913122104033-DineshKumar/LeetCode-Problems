@@ -173,7 +173,8 @@ public class Graph {
                 this.parent = parent;
             }
         }
-        boolean detectCycle(int src, int V, 
+        //Breadth First Search
+        private boolean detectCycle(int src, int V, 
             ArrayList<ArrayList<Integer>> adj, boolean[] visited) {
             Queue<Pair> queue = new LinkedList<>();
             queue.add(new Pair(src, -1));
@@ -191,6 +192,21 @@ public class Graph {
                     }
                 }
             }
+            return false;
+        }
+        //Depth First Search
+        private boolean detectCycle(int node, int parent, 
+            ArrayList<ArrayList<Integer>> adj, boolean[] visited) {
+            for (int neighbour : adj.get(node)) {
+                if (!visited[neighbour]) {
+                    visited[neighbour] = true;
+                    if (detectCycle(neighbour, node, adj, visited)) {
+                        return true;
+                    }
+                } else if (parent != neighbour) {
+                    return true;
+                }
+            }   
             return false;
         }
         int V = adj.size();
