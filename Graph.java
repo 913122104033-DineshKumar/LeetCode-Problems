@@ -61,6 +61,35 @@ public class Graph {
         }
         return ans;
     }
+    //Number Of Islands
+    public int numIslands(char[][] grid) {
+        private void dfs(int i, int j, int n, int m, char[][] grid, boolean[][] visited, int[][] directions) {
+            for (int[] direction : directions) {
+                int newI = direction[0] + i;
+                int newJ = direction[1] + j;
+                if (newI >= 0 && newI < n && newJ >= 0 && newJ < m && !visited[newI][newJ] 
+                    && grid[newI][newJ] == '1') {
+                    visited[newI][newJ] = true;
+                    dfs(newI, newJ, n, m, grid, visited, directions);
+                }
+            }   
+        }
+        int n = grid.length;
+        int m = grid[0].length;
+        int islands = 0;
+        int[][] directions = { { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, 0 } };
+        boolean[][] visited = new boolean[n][m];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == '1' && !visited[i][j]) {
+                    islands++;
+                    visited[i][j] = true;
+                    dfs(i, j, n, m, grid, visited, directions);
+                }
+            }
+        }
+        return islands;
+    }
     //Dijstra Algorithm Implementation
     public ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
         class iPair {
