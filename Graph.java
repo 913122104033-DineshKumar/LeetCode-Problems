@@ -164,6 +164,46 @@ public class Graph {
         }
         return time;
     }
+    //Cycle in a Graph
+    public boolean isCycle(ArrayList<ArrayList<Integer>> adj) {
+        class Pair {
+            int node, parent;
+            public Pair(int node, int parent) {
+                this.node = node;
+                this.parent = parent;
+            }
+        }
+        boolean detectCycle(int src, int V, 
+            ArrayList<ArrayList<Integer>> adj, boolean[] visited) {
+            Queue<Pair> queue = new LinkedList<>();
+            queue.add(new Pair(src, -1));
+            visited[src] = true;
+            while (!queue.isEmpty()) {
+                Pair pair = queue.poll();
+                int node = pair.node;
+                int parent = pair.parent;
+                for (int neighbour : adj.get(node)) {
+                    if (!visited[neighbour]) {
+                        visited[neighbour] = true;
+                        queue.add(new Pair(neighbour, node));
+                    } else if (parent != neighbour) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        int V = adj.size();
+        boolean[] visited = new boolean[V];
+        for (int i = 0; i < V; i++) {
+            if (!visited[i]) {
+                if (detectCycle(i, V, adj, visited)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     //Dijstra Algorithm Implementation
     public ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
         class iPair {
