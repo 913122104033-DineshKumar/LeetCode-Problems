@@ -220,6 +220,49 @@ public class Graph {
         }
         return false;
     }
+    //Distance of nearest cell having 1
+    public int[][] nearest(int[][] grid)
+    {
+        class Pair {
+            int row, col, dist;
+            public Pair (int row, int col, int dist) {
+                this.row = row;
+                this.col = col;
+                this.dist = dist;
+            }
+        }   
+        int n = grid.length, m = grid[0].length;
+        int[][] ans = new int[n][m];
+        boolean[][] visited = new boolean[n][m];
+        Queue<Pair> queue = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 1) {
+                    ans[i][j] = 0;
+                    visited[i][j] = true;
+                    queue.add(new Pair(i, j, 0));
+                }
+            }
+        }
+        int[][] directions = { { -1, 0 } , { 1, 0 }, { 0, -1 }, { 0, 1 } };
+        while (!queue.isEmpty()) {
+            Pair pair = queue.poll();
+            int row = pair.row;
+            int col = pair.col;
+            int dist = pair.dist;
+            for (int[] direction : directions) {
+                int nrow = row + direction[0];
+                int ncol = col + direction[1];
+                if (nrow >= 0 && nrow < n && ncol >= 0 && ncol < m &&
+                    !visited[nrow][ncol] && grid[nrow][ncol] == 0) {
+                    visited[nrow][ncol] = true;
+                    ans[nrow][ncol] = dist + 1;
+                    queue.add(new Pair(nrow, ncol, dist + 1));
+                }
+            }
+        }
+        return ans;
+    }
     //Dijstra Algorithm Implementation
     public ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
         class iPair {
