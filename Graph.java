@@ -263,6 +263,43 @@ public class Graph {
         }
         return ans;
     }
+    //Replace 'O's with 'X's
+    public char[][] fill(char mat[][]) {
+        private void dfs(int row, int col, int n, int m, int[][] directions, boolean[][] visited, char[][] grid) {
+            for (int[] direction : directions) {
+                int nrow = row + direction[0];
+                int ncol = col + direction[1];
+                if (nrow >= 0 && nrow < n && ncol >= 0 && ncol < m && 
+                    grid[nrow][ncol] == 'O' && !visited[nrow][ncol]) {
+                        visited[nrow][ncol] = true;
+                    dfs(nrow, ncol,n, m, directions, visited, grid);    
+                }
+            }
+        }   
+        int n = mat.length, m = mat[0].length;
+        boolean[][] visited = new boolean[n][m];
+        char[][] ans = new char[n][m];
+        int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                ans[i][j] = mat[i][j];
+                if (mat[i][j] == 'O' && !visited[i][j]) {
+                    if (i == 0 || i == n -1 || j == 0 || j == m - 1) {
+                        visited[i][j] = true;
+                        dfs(i, j, n, m, directions, visited, mat);
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (!visited[i][j] && mat[i][j] == 'O') {
+                    ans[i][j] = 'X';
+                }
+            }
+        }
+        return ans;
+    }
     //Dijstra Algorithm Implementation
     public ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
         class iPair {
