@@ -347,8 +347,46 @@ public class Graph {
         }
         return ans;
     }
+    //Number of Distinct Islands
+    public int countDistinctIslands(int[][] grid) {
+        private void dfs(int row, int col, int n, int m, int baseRow, int baseCol, 
+            int[][] grid, 
+            int[][] directions, 
+            boolean[][] visited, 
+            List<String> ds) 
+        {
+            visited[row][col] = true;
+            ds.add(toString(row - baseRow, col - baseCol));
+            for (int[] direction : directions) {
+                int nrow = row + direction[0];
+                int ncol = col + direction[1];
+                if (nrow >= 0 && ncol >= 0 && nrow < n && ncol < m && grid[nrow][ncol] == 1
+                    && !visited[nrow][ncol]) {
+                    dfs(nrow, ncol, n, m, baseRow, baseCol, grid, directions, visited, ds);
+                }
+            }
+        }
+        private String toString(int r, int c) {
+            return Integer.toString(r) + " " + Integer.toString(c);
+        }
+        int n = grid.length;
+        int m = grid[0].length;
+        boolean[][] visited = new boolean[n][m];
+        Set<List<String>> seen = new HashSet<>();
+        int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 1 && !visited[i][j]) {
+                    List<String> ds = new ArrayList<>();
+                    dfs(i, j, n, m, i, j, grid, directions, visited, ds);
+                    seen.add(ds);
+                }
+            }
+        }
+        return seen.size();
+    }
     //
-    
+
     //Dijstra Algorithm Implementation
     public ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
         class iPair {
