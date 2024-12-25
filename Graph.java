@@ -466,6 +466,41 @@ public class Graph {
         }
         return false;
     }
+    //Eventual Safe State
+    public List<Integer> eventualSafeNodes(int V, List<List<Integer>> adj) {
+        private boolean dfs(int node, List<List<Integer>> adj, boolean[] visited, boolean[] path, boolean[] check) {
+            visited[node] = true;
+            path[node] = true;
+            check[node] = false;
+            for (int neighbour : adj.get(node)) {
+                if (!visited[neighbour]) {
+                    if (dfs(neighbour, adj, visited, path, check)) {
+                        return true;
+                    }
+                } else if (path[neighbour]) {
+                    return true;
+                }
+            }
+            check[node] = true;
+            path[node] = false;
+            return false;
+        }
+        boolean[] visited = new boolean[V];
+        boolean[] path = new boolean[V];
+        boolean[] check = new boolean[V];
+        for (int node = 0; node < V; node++) {
+            if (!visited[node]) {
+                dfs(node, adj, visited, path, check);
+            }
+        }
+        List<Integer> ans = new ArrayList<>();
+        for (int node = 0; node < V; node++) {
+            if (check[node]) {
+                ans.add(node);
+            }
+        }
+        return ans;
+    }
     //
 
     //Dijstra Algorithm Implementation
