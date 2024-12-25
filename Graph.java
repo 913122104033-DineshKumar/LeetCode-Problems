@@ -438,6 +438,35 @@ public class Graph {
         }
         return true;
     }
+    //Cycle in Directed Graph
+    public boolean isCyclic(int V, ArrayList<ArrayList<Integer>> adj) {
+        private boolean dfs(int node, ArrayList<ArrayList<Integer>> adj, boolean[] visited, boolean[] path) {
+            visited[node] = true;
+            path[node] = true;
+            for (int neighbour : adj.get(node)) {
+                if (!visited[neighbour]) {
+                    if (dfs(neighbour, adj, visited, path)) {
+                       return true;
+                    }
+                } else if (path[neighbour]) {
+                    return true;
+                }
+            }
+            path[node] = false;
+            return false;
+        }
+        boolean[] visited = new boolean[V];
+        boolean[] path = new boolean[V];
+        for (int node = 0; node < V; node++) {
+            if (!visited[node]) {
+                if (dfs(node, adj, visited, path)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    //
 
     //Dijstra Algorithm Implementation
     public ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
