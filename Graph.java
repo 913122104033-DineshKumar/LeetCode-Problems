@@ -385,7 +385,59 @@ public class Graph {
         }
         return seen.size();
     }
-    //
+    //Bipartite Graph
+    public boolean isBipartite(ArrayList<ArrayList<Integer>> adj) {
+        class Pair {
+            int node;
+            int color;
+            public Pair(int node, int color) {
+                this.node = node;
+                this.color = color;
+            }
+        }
+        //DFS
+        private boolean dfs(int node, int[][] graph, int[] coloring) {
+            for (int neighbour : graph[node]) {
+                if (coloring[neighbour] == -1) {
+                    coloring[neighbour] = 1 - coloring[node];
+                    if (!dfs(neighbour, graph, coloring)) {
+                        return false;
+                    }
+                } else if (coloring[neighbour] == coloring[node]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        //BFS
+        Queue<Pair> queue = new LinkedList<>();
+        int[] colors = { 0, 1 };
+        int[] nodes = new int[adj.size()];
+        Arrays.fill(nodes, -1);
+        nodes[0] = 0;
+        queue.add(new Pair(0, 0));
+        while (!queue.isEmpty()) {
+            Pair pair = queue.poll();
+            int node = pair.node;
+            int color = pair.color;
+            for (int neighbour : adj.get(node)) {
+                if (nodes[neighbour] == -1) {
+                    for (int c : colors) {
+                        if (c != color) {
+                            nodes[neighbour] = c;
+                            queue.add(new Pair(neighbour, c));
+                        }
+                    } 
+                    if (nodes[neighbour] == -1) {
+                        return false;
+                    }
+                } else if (nodes[neighbour] == color) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     //Dijstra Algorithm Implementation
     public ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
