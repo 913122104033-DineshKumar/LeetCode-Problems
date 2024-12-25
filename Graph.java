@@ -501,6 +501,31 @@ public class Graph {
         }
         return ans;
     }
+    //Topological Sorting
+    public ArrayList<Integer> topologicalSort(ArrayList<ArrayList<Integer>> adj) {
+        private void dfs(int node, ArrayList<ArrayList<Integer>> adj, boolean[] visited, Stack<Integer> stack) {
+            visited[node] = true;
+            for (int neighbour : adj.get(node)) {
+                if (!visited[neighbour]) {
+                    dfs(neighbour, adj, visited, stack);
+                }
+            }
+            stack.push(node);
+        }
+        int V = adj.size();
+        boolean[] visited = new boolean[V];
+        Stack<Integer> stack = new Stack<>();
+        for (int node = 0; node < V; node++){
+            if (!visited[node]) {
+                dfs(node, adj, visited, stack);
+            }
+        }
+        ArrayList<Integer> ans = new ArrayList<>();
+        while (!stack.isEmpty()) {
+            ans.add(stack.pop());
+        }
+        return ans;
+    }
     //
 
     //Dijstra Algorithm Implementation
