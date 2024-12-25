@@ -300,6 +300,55 @@ public class Graph {
         }
         return ans;
     }
+    //Number of Enclaves
+    public int numberOfEnclaves(int[][] grid) {
+        class Pair {
+            int row;
+            int col;
+            public Pair (int row, int col) {
+                this.row = row;
+                this.col = col;
+            }
+        }
+        int n = grid.length;
+        int m = grid[0].length;
+        boolean[][] visited = new boolean[n][m];
+        Queue<Pair> queue = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 1) {
+                    if (i == 0 || i == n - 1 || j == 0 || j == m - 1) {
+                        visited[i][j] = true;
+                        queue.add(new Pair(i, j));
+                    }
+                }
+            }
+        }
+        int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+        while (!queue.isEmpty()) {
+            Pair pair = queue.poll();
+            for (int[] direction : directions) {
+                int nrow = pair.row + direction[0];
+                int ncol = pair.col + direction[1];
+                if (nrow >= 0 && nrow < n && ncol >= 0 && ncol < m 
+                    && grid[nrow][ncol] == 1 && !visited[nrow][ncol]) {
+                    visited[nrow][ncol] = true;
+                    queue.add(new Pair(nrow, ncol));
+                }
+            }
+        }
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 1 && !visited[i][j]) {
+                    ans++;
+                }
+            }
+        }
+        return ans;
+    }
+    //
+    
     //Dijstra Algorithm Implementation
     public ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
         class iPair {
