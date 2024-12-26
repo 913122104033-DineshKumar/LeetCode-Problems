@@ -502,16 +502,11 @@ public class Graph {
             for (int i = 0; i < V; i++) {
                 newGraph.add(i, new ArrayList<>());
             }
+            int[] inDegrees = new int[V];
             for (int node = 0; node < V; node++) {
                 for (int neighbour : adj.get(node)) {
                     newGraph.get(neighbour).add(node);
-                }
-            }
-            int[] inDegrees = new int[V];
-            Arrays.fill(inDegrees, 0);
-            for (int node = 0; node < V; node++) {
-                for (int neighbour : newGraph.get(node)) {
-                    inDegrees[neighbour]++;
+                    inDegrees[node]++;
                 }
             }
             Queue<Integer> queue = new LinkedList<>();
@@ -531,6 +526,8 @@ public class Graph {
                 }
                 ans.add(currentNode);
             }
+            //Sorting the nodes
+            Collections.sort(ans);
             return ans;
         }
         private boolean dfs(int node, List<List<Integer>> adj, boolean[] visited, boolean[] path, boolean[] check) {
@@ -619,8 +616,55 @@ public class Graph {
         }
         return ans;
     }
+    //Alien Dictionary
+    public String findOrder(String[] dict, int k) {
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < k; i++) {
+            adj.add(i, new ArrayList<>());
+        }
+        int[] inDegrees = new int[k];
+        Arrays.fill(inDegrees, 0);
+        for (int i = 0; i < dict.length - 1; i++) {
+            String s1 = dict[i];
+            String s2 = dict[i + 1];
+            int index1 = 0, index2 = 0;
+            while (index1 < s1.length() && index2 < s2.length() 
+                && s1.charAt(index1) == s2.charAt(index2)) {
+                index1++;
+                index2++;
+            }
+            if (index1 == s1.length() || index2 == s2.length()) {
+                continue;
+            }
+            int u = s1.charAt(index1) - 'a';
+            int v = s2.charAt(index2) - 'a';
+            adj.get(u).add(v);
+            inDegrees[v]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int node = 0; node < k; node++) {
+            if (inDegrees[node] == 0) {
+                queue.add(node);
+            }
+        }
+        String ans = "";
+        while (!queue.isEmpty()) {
+            int currentNode = queue.poll();
+            for (int neighbour : adj.get(currentNode)) {
+                inDegrees[neighbour]--;
+                if (inDegrees[neighbour] == 0) {
+                    queue.add(neighbour);
+                }
+            }
+            ans += ((char) (currentNode + (int) 'a'));
+        }
+        if (ans.length() != k) {
+            return "";
+        }
+        return ans;
+    }
     //
-
+    
     //Dijstra Algorithm Implementation
     public ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
         class iPair {
