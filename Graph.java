@@ -744,7 +744,7 @@ public class Graph {
         }
         return dist;
     }
-    //Word Break
+    //Word Ladder
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
         class Pair {
             String word;
@@ -779,7 +779,51 @@ public class Graph {
         }
         return 0;
     }
-    //
+    //Word Ladder- II
+    public ArrayList<ArrayList<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        Set<String> set = new HashSet<>();
+        for (String word : wordList) {
+            set.add(word);
+        }
+        List<String> wrds = new ArrayList<>();
+        wrds.add(beginWord);
+        Queue<List<String>> queue = new LinkedList<>();
+        queue.add(wrds);
+        ArrayList<ArrayList<String>> ans = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            Set<String> seen = new HashSet<>();
+            for (int i = 0; i < size; i++) {
+                List<String> words = queue.peek();
+                queue.remove();
+                if (words.get(words.size() - 1).equals(endWord)) {
+                    if (ans.size() == 0) {
+                        ans.add(new ArrayList<>(words));
+                    } else if (ans.get(0).size() == words.size()) {
+                        ans.add(new ArrayList<>(words));
+                    }
+                    continue;
+                }
+                for (int j = 0; j < words.get(words.size() - 1).length(); j++) {
+                    StringBuilder word = new StringBuilder(words.get(words.size() - 1));
+                    for (char chr = 'a'; chr <= 'z'; chr++) {
+                        word.setCharAt(j, chr);
+                        if (set.contains(word.toString())) {
+                            seen.add(word.toString());
+                            words.add(word.toString());
+                            List<String> temp = new ArrayList<>(words);
+                            queue.add(temp);
+                            words.remove(words.size() - 1);
+                        }
+                    }
+                }
+            }
+            for (String s : seen) {
+                set.remove(s);
+            }
+        }
+        return ans;
+    }
     
     //Dijstra Algorithm Implementation
     public ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
