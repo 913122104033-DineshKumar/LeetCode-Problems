@@ -663,8 +663,64 @@ public class Graph {
         }
         return ans;
     }
+    //Shortest Path in Directed Acyclic Graph
+    public int[] shortestPath(int V, int E, int[][] edges) {
+        class Pair {
+            int node;
+            int weight;
+            public Pair(int node, int weight) {
+                this.node = node;
+                this.weight = weight;
+            }
+        }
+        private void dfs(int node, List<List<Pair>> adj, boolean[] visited, Stack<Integer> stack) {
+            visited[node] = true;
+            for (Pair neighbour : adj.get(node)) {
+                if (!visited[neighbour.node]) {
+                    dfs(neighbour.node, adj, visited, stack);
+                }
+            }
+            stack.push(node);
+        }
+        List<List<Pair>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            adj.add(i, new ArrayList<Pair>());
+        }
+        for (int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            int weight = edge[2];
+            adj.get(u).add(new Pair(v, weight));
+        }
+        boolean[] visited = new boolean[V];
+        Stack<Integer> stack = new Stack<>();
+        for (int node = 0; node < V; node++) {
+            if (!visited[node]) {
+                dfs(node, adj, visited, stack);
+            }
+        }
+        int[] dist = new int[V];
+        Arrays.fill(dist, (int) 1e9);
+        dist[0] = 0;
+        while (!stack.isEmpty()) {
+            int node = stack.pop();
+            for (Pair neighbour : adj.get(node)) {
+                int v = neighbour.node;
+                int w = neighbour.weight;
+                if (dist[node] + w < dist[v]) {
+                    dist[v] = dist[node] + w;
+                }
+            }
+        }
+        for (int node = 0; node < V; node++) {
+            if (dist[node] == 1e9) {
+                dist[node] = -1;
+            }
+        }
+        return dist;
+    }
     //
-    
+
     //Dijstra Algorithm Implementation
     public ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
         class iPair {
