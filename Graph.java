@@ -496,6 +496,43 @@ public class Graph {
     }
     //Eventual Safe State
     public List<Integer> eventualSafeNodes(int V, List<List<Integer>> adj) {
+        private List<Integer> bfs(List<List<Integer>> adj) {
+            int V = adj.size();
+            List<List<Integer>> newGraph = new ArrayList<>();
+            for (int i = 0; i < V; i++) {
+                newGraph.add(i, new ArrayList<>());
+            }
+            for (int node = 0; node < V; node++) {
+                for (int neighbour : adj.get(node)) {
+                    newGraph.get(neighbour).add(node);
+                }
+            }
+            int[] inDegrees = new int[V];
+            Arrays.fill(inDegrees, 0);
+            for (int node = 0; node < V; node++) {
+                for (int neighbour : newGraph.get(node)) {
+                    inDegrees[neighbour]++;
+                }
+            }
+            Queue<Integer> queue = new LinkedList<>();
+            for (int node = 0; node < V; node++) {
+                if (inDegrees[node] == 0) {
+                    queue.add(node);
+                }
+            }
+            List<Integer> ans =  new ArrayList<>();
+            while (!queue.isEmpty()) {
+                int currentNode = queue.poll();
+                for (int neighbour : newGraph.get(currentNode)) {
+                    inDegrees[neighbour]--;
+                    if (inDegress[neighbour] == 0) {
+                        queue.add(neighbour);
+                    }
+                }
+                ans.add(currentNode);
+            }
+            return ans;
+        }
         private boolean dfs(int node, List<List<Integer>> adj, boolean[] visited, boolean[] path, boolean[] check) {
             visited[node] = true;
             path[node] = true;
