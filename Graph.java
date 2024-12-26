@@ -744,6 +744,41 @@ public class Graph {
         }
         return dist;
     }
+    //Word Break
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        class Pair {
+            String word;
+            int level;
+            public Pair(String word, int level) {
+                this.word = word;
+                this.level = level;
+            }
+        }
+        Set<String> set = new HashSet<>();
+        for (String word : wordList) {
+            set.add(word);
+        }
+        Queue<Pair> queue = new LinkedList<>();
+        queue.add(new Pair(beginWord, 1));
+        while (!queue.isEmpty()) {
+            Pair pair = queue.poll();
+            int lvl = pair.level;
+            if (pair.word.equals(endWord)) {
+                return lvl;
+            }
+            for (int i = 0; i < pair.word.length(); i++) {
+                StringBuilder word = new StringBuilder(pair.word);
+                for (char chr = 'a'; chr <= 'z'; chr++) {
+                    word.setCharAt(i ,chr);
+                    if (set.contains(word.toString())) {
+                        set.remove(word.toString());
+                        queue.add(new Pair(word.toString(), lvl + 1));
+                    }
+                }
+            }
+        }
+        return 0;
+    }
     //
     
     //Dijstra Algorithm Implementation
