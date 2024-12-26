@@ -719,8 +719,33 @@ public class Graph {
         }
         return dist;
     }
+    //Shortest path in Undirected Path
+    public int[] shortestPath(ArrayList<ArrayList<Integer>> adj, int src) {
+        int[] dist = new int[adj.size()];
+        Arrays.fill(dist, (int) 1e9);
+        dist[src] = 0;
+        Queue<Pair> queue = new LinkedList<>();
+        queue.add(new Pair(src, 0));
+        while (!queue.isEmpty()) {
+            Pair pair = queue.poll();
+            int node = pair.node;
+            int wt = pair.weight;
+            for (int neighbour : adj.get(node)) {
+                if (dist[node] + 1 < dist[neighbour]) {
+                    dist[neighbour] = dist[node] + 1;
+                    queue.add(new Pair(neighbour, dist[neighbour]));
+                }
+            }
+        }
+        for (int i = 0; i < adj.size(); i++) {
+            if (dist[i] == 1e9) {
+                dist[i] = -1;
+            }
+        }
+        return dist;
+    }
     //
-
+    
     //Dijstra Algorithm Implementation
     public ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
         class iPair {
