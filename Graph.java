@@ -512,6 +512,34 @@ public class Graph {
             }
             stack.push(node);
         }
+        private ArrayList<Integer> bfs(ArrayList<ArrayList<Integer>> adj) {
+            int V = adj.size();
+            int[] inNodes = new int[V];
+            Arrays.fill(inNodes, 0);
+            ArrayList<Integer> ans = new ArrayList<>();
+            for (int i = 0; i < V; i++) {
+                for (int neighbour : adj.get(i)) {
+                    inNodes[neighbour]++;
+                }
+            }
+            Queue<Integer> queue = new LinkedList<>();
+            for (int node = 0; node < V; node++) {
+                if (inNodes[node] == 0) {
+                    queue.add(node);
+                }
+            }
+            while (!queue.isEmpty()) {
+                int currentNode = queue.poll();
+                for (int neighbour : adj.get(currentNode)) {
+                    inNodes[neighbour]--; 
+                    if (inNodes[neighbour] == 0) {
+                        queue.add(neighbour);
+                    }
+                }
+                ans.add(currentNode);
+            }
+            return ans;
+        }
         int V = adj.size();
         boolean[] visited = new boolean[V];
         Stack<Integer> stack = new Stack<>();
