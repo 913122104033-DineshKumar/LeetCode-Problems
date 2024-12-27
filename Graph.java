@@ -945,4 +945,52 @@ public class Graph {
         }
         return -1;
     }
+    //Path with Minimum Effort
+    public int MinimumEffort(int n, int m, int[][] heights) {
+        class Tuple {
+            int diff;
+            int row;
+            int col;
+            public Tuple(int diff, int row, int col) {
+                this.diff = diff;
+                this.row = row;
+                this.col = col;
+            }
+        }
+        int[][] dist = new int[n][m];
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(dist[i], (int) 1e9);
+        }
+        PriorityQueue<Tuple> minHeap = new PriorityQueue<>(
+            (a, b) -> Integer.compare(a.diff, b.diff)
+        );
+        int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, 1 }, { 0, -1 } };
+        Tuple tup = new Tuple(0, 0, 0);
+        dist[0][0] = 0;
+        minHeap.offer(tup);
+        while (!minHeap.isEmpty()) {
+            Tuple tuple = minHeap.poll();
+            int diff = tuple.diff;
+            int row = tuple.row;
+            int col = tuple.col;
+            if (row == n - 1 && col == m - 1) {
+                return diff;
+            }
+            for (int[] direction : directions) {
+                int nrow = row + direction[0];
+                int ncol = col + direction[1];
+                if (nrow >= 0 && ncol >= 0 && nrow < n && ncol < m) {
+                    int newEffort = Math.max(
+                        Math.abs(heights[row][col] - heights[nrow][ncol]), 
+                        diff
+                    );
+                    if (newEffort < dist[nrow][ncol]) {
+                        dist[nrow][ncol] = newEffort;
+                        minHeap.offer(new Tuple(newEffort, nrow, ncol));
+                    }
+                }
+            }
+        }
+        return -1;
+    }
 }
