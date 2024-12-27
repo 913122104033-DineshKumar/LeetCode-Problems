@@ -824,7 +824,6 @@ public class Graph {
         }
         return ans;
     }
-    
     //Dijstra Algorithm Implementation
     public ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
         class iPair {
@@ -856,6 +855,59 @@ public class Graph {
         for (int dis : dist) {
             ans.add(dis);
         }
+        return ans;
+    }
+    //Shortest Path for a Particular Node
+    public List<Integer> shortestPath(int n, int m, int edges[][]) {
+        List<List<Pair>> adj = new ArrayList<>();
+        for (int i = 0; i <= n; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < m; i++) {
+            int u = edges[i][0];
+            int v = edges[i][1];
+            int wt = edges[i][2];
+            adj.get(u).add(new Pair(wt, v));
+            adj.get(v).add(new Pair(wt, u));
+        }
+        int[] parent = new int[n + 1];
+        int[] dist = new int[n + 1];
+        for (int i = 1; i <= n ;i++) {
+            parent[i] = i;
+            dist[i] = Integer.MAX_VALUE;
+        }
+        dist[1] = 0;
+        PriorityQueue<Pair> minHeap = new PriorityQueue<>(
+            (a, b) -> Integer.compare(a.first, b.first)
+        );
+        minHeap.offer(new Pair(0, 1));
+        while (!minHeap.isEmpty()) {
+            Pair top = minHeap.poll();
+            int node = top.second;
+            int dis = top.first;
+            for (Pair neighbour : adj.get(node)) {
+                int v = neighbour.second;
+                int edgeWeight = neighbour.first;
+                if (edgeWeight + dis < dist[v]) {
+                    dist[v] = dis + edgeWeight;
+                    minHeap.offer(new Pair(dist[v], v));
+                    parent[v] = node;
+                }
+            }
+        }
+        List<Integer> ans = new ArrayList<>();
+        if (dist[n] == Integer.MAX_VALUE) {
+            ans.add(-1);
+            return ans;
+        }
+        int node = n;
+        while (parent[node] != node) {
+            ans.add(node);
+            node = parent[node];
+        }
+        ans.add(1);
+        Collections.reverse(ans);
+        ans.add(0, dist[n]);
         return ans;
     }
 }
