@@ -993,4 +993,55 @@ public class Graph {
         }
         return -1;
     }
+    //Cheapest Flight within K Stops
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+        class Tuple {
+            int cost;
+            int node;
+            int stop;
+            public Tuple(int stop, int node, int cost) {
+                this.cost = cost;
+                this.node = node;
+                this.stop = stop;
+            }
+            public Tuple(int cost, int node) {
+                this.cost = cost;
+                this.node = node;
+            }
+        }
+        List<List<Tuple>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] flight : flights) {
+            adj.get(flight[0]).add(new Tuple(flight[2], flight[1]));
+        }
+        int[] dist = new int[n];
+        Arrays.fill(dist, (int) 1e9);
+        dist[src] = 0;
+        Queue<Tuple> queue = new LinkedList<>();
+        Tuple source = new Tuple(0, src, 0);
+        queue.add(source);
+        while (!queue.isEmpty()) {
+            Tuple tuple = queue.poll();
+            int cost = tuple.cost;
+            int node = tuple.node;
+            int stop = tuple.stop;
+            if (stop > k) {
+                continue;
+            }
+            for (Tuple neighbour : adj.get(node)) {
+                int adjNode = neighbour.node;
+                int adjCost = neighbour.cost;
+                if (adjCost + cost < dist[adjNode] && stop <= k) {
+                    dist[adjNode] = adjCost + cost;
+                    queue.add(new Tuple(stop + 1, adjNode, dist[adjNode]));
+                }
+            }
+        }
+        if (dist[dst] == (int) 1e9) {
+            return -1;
+        }
+        return dist[dst];
+    }
 }
