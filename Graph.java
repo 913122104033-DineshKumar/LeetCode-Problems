@@ -1044,4 +1044,32 @@ public class Graph {
         }
         return dist[dst];
     }
+    //Minimum multiplications to reach end
+    private int minimumMultiplications(int[] arr, int start, int end) {
+        private static final int MOD = 100000;
+        if (start == end) {
+            return 0;
+        }
+        int[] dist = new int[100000];
+        Arrays.fill(dist, (int) 1e9);
+        dist[start] = 0;
+        Queue<Pair> queue = new LinkedList<>();
+        queue.add(new Pair(start, 0));
+        while (!queue.isEmpty()) {
+            Pair pair = queue.poll();
+            int steps = pair.steps;
+            int node = pair.node;
+            for (int mul : arr) {
+                int adjNode = (mul * node) % MOD;
+                if (steps + 1 < dist[adjNode]) {
+                    dist[adjNode] = steps + 1;
+                    if (adjNode == end) {
+                        return steps + 1;
+                    }
+                    queue.add(new Pair(adjNode, steps + 1));
+                }
+            }
+        }
+        return -1;
+    }
 }
