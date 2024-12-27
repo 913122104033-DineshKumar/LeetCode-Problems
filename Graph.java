@@ -910,4 +910,39 @@ public class Graph {
         ans.add(0, dist[n]);
         return ans;
     }
+    //Shortest Path in Binary Maze
+    int shortestPath(int[][] grid, int[] source, int[] destination) {
+        int n = grid.length;
+        int m = grid[0].length;
+        int[][] dist = new int[n][m];
+        int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, 1 }, { 0, -1 } };
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(dist[i], (int) 1e9);
+        }
+        Queue<int[]> queue = new LinkedList<>();
+        dist[source[0]][source[1]] = 0;
+        int[] src = { 0, source[0], source[1] };
+        queue.add(src);
+        while (!queue.isEmpty()) {
+            int[] current = queue.poll();
+            int row = current[1];
+            int col = current[2];
+            int dis = current[0];
+            if (row == destination[0] && col == destination[1]) {
+                return dis;
+            }
+            for (int[] direction : directions) {
+                int nrow = row + direction[0];
+                int ncol = col + direction[1];
+                if (nrow >= 0 && ncol >= 0 && ncol < m && nrow < n 
+                    && grid[nrow][ncol] == 1) {
+                    if (dis + 1 < dist[nrow][ncol]) {
+                        dist[nrow][ncol] = dis + 1;
+                        queue.add(new int[]{ dis + 1, nrow, ncol });
+                    }    
+                }
+            }
+        }
+        return -1;
+    }
 }
