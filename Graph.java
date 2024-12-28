@@ -1170,4 +1170,47 @@ public class Graph {
             }
         }
     }
+    //Find the City With the Smallest Number of Neighbors at a Threshold Distance
+    public int findTheCity(int n, int[][] edges, int distanceThreshold) {
+        int[][] cost = new int[n][n];
+        for (int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            int weight = edge[2];
+            cost[u][v] = weight;
+            cost[v][u] = weight;
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i != j && cost[i][j] == 0) {
+                    cost[i][j] = (int) 1e9;
+                }
+            }
+        }
+        for (int via = 0; via < n; via++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (cost[i][via] == (int) 1e9 || cost[via][j] == (int) 1e9) {
+                        continue;
+                    }
+                    cost[i][j] = Math.min(cost[i][j], cost[i][via] + cost[via][j]);
+                }
+            }
+        }
+        int minCities = n;
+        int ans = -1;
+        for (int i = 0; i < n; i++) {
+            int countCities = 0;
+            for (int j = 0; j < n; j++) {
+                if (cost[i][j] <= distanceThreshold) {
+                    countCities++;
+                }
+            }
+            if (countCities <= minCities) {
+                minCities = countCities;
+                ans = i;
+            } 
+        }
+        return ans;
+    }
 }
