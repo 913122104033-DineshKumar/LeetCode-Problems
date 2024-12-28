@@ -1072,4 +1072,102 @@ public class Graph {
         }
         return -1;
     }
+    //Number of Ways to Arrive at Destination
+    public int countPaths(int n, int[][] roads) {
+        class Pair {
+            long dist;
+            int node;
+            public Pair (long dist, int node) {
+                this.dist = dist;
+                this.node = node;
+            }
+        }
+        List<List<Pair>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<>());
+        }     
+        for (int[] road : roads) {
+            int u = road[0];
+            int v = road[1];
+            int dist = road[2];
+            adj.get(u).add(new Pair(dist, v));
+            adj.get(v).add(new Pair(dist, u));
+        }
+        PriorityQueue<Pair> minHeap = new PriorityQueue<>(Comparator.comparingLong(a -> a.dist));
+        long[] dist = new long[n];
+        long[] paths = new long[n];
+        Arrays.fill(dist, Long.MAX_VALUE);
+        Arrays.fill(paths, 0);
+        dist[0] = 0;
+        paths[0] = 1;
+        minHeap.offer(new Pair(0, 0));
+        int mod = (int) 1e9 + 7;
+        while (!minHeap.isEmpty()) {
+            Pair pair = minHeap.poll();
+            int node = pair.node;
+            long dis = pair.dist;
+            for (Pair neighbour : adj.get(node)) {
+                int adjNode = neighbour.node;
+                long edW = neighbour.dist;
+                if (edW + dis < dist[adjNode]) {
+                    dist[adjNode] = edW + dis;
+                    minHeap.offer(new Pair(edW + dis, adjNode));
+                    paths[adjNode] = paths[node];
+                } else if (edW + dis == dist[adjNode]) {
+                    paths[adjNode] = (paths[adjNode] + paths[node]) % mod;
+                }
+            }
+        }
+        return (int) paths[n - 1] % mod;
+    }
+    //Bellman Ford Algorithm
+    public int[] bellmanFord(int V, int[][] edges, int src) {
+        int[] dist = new int[V];
+        Arrays.fill(dist, (int) 1e8);
+        dist[src] = 0;
+        for (int i = 0; i < V - 1; i++) {
+            for (int[] edge : edges) {
+                int u = edge[0];
+                int v = edge[1];
+                int wt = edge[2];
+                if (dist[u] != 1e8 && dist[u] + wt < dist[v]) {
+                    dist[v] = dist[u] + wt;
+                }
+            }
+        }
+        for (int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            int wt = edge[2];
+            if (dist[u] != 1e8 && dist[u] + wt < dist[v]) {
+                return new int[]{ -1 };
+            }
+        }
+        return dist;
+    }
+    //Warshall's Algorithm
+    public void shortestDistance(int[][] cost) {
+        int n = cost.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (cost[i][j] == -1) {
+                    cost[i][j] = (int) 1e9;
+                } 
+            }
+        }
+        for (int via = 0; via < n; via++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    cost[i][j] = Math.min(cost[i][j], cost[i][via] + cost[via][j]);
+                }
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (cost[i][j] == (int) 1e9) {
+                    cost[i][j] = -1;
+                } 
+            }
+        }
+    }
 }
