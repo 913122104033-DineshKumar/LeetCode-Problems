@@ -1213,4 +1213,30 @@ public class Graph {
         }
         return ans;
     }
+    //Minimum Spanning Tree - Prism's Algorithm
+    private int spanningTree(int V, int E, List<List<int[]>> adj) {
+        boolean[] visited = new boolean[V];
+        PriorityQueue<int[]> minHeap = new PriorityQueue<>((a, b) -> Integer.compare(a[0], b[0]));
+        minHeap.offer(new int[] { 0, 0, -1 });
+        int sum = 0;
+        while (!minHeap.isEmpty()) {
+            int[] current = minHeap.poll();
+            int node = current[1];
+            int dist = current[0];
+            int parent = current[2];
+            if (visited[node]) {
+                continue;
+            }
+            sum += dist;
+            visited[node] = true;
+            for (int[] neighbour : adj.get(node)) {
+                int adjNode = neighbour[0];
+                int cost = neighbour[1];
+                if (!visited[adjNode]) {
+                    minHeap.offer(new int[] { cost, adjNode, node });
+                }
+            }
+        }
+        return sum;
+    }
 }
