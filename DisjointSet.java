@@ -84,5 +84,27 @@ class DisjointSet {
         }
         return max_Wt;
     }
+    //Number of Provinces
+    public int findCircleNum(int[][] isConnected) {
+        public int numberOfComponents() {
+            int components = 0;
+            for (int i = 0; i < parent.size(); i++) {
+                if (parent.get(i) == i) {
+                    components++;
+                }
+            }
+            return components;
+        }
+        int n = isConnected.length;
+        DisjointSet dsu = new DisjointSet(n);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i != j && isConnected[i][j] == 1) {
+                    dsu.unionBySize(i, j);
+                }
+            }
+        }
+        return dsu.numberOfComponents();
+    }
 }
     
