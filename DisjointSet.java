@@ -1,21 +1,37 @@
 class DisjointSet {
-    List<Integer> rank;
-    List<Integer> parent;
     List<Integer> size;
-    public DisjoitSet(int n) {
+    List<Integer> parent;
+    List<Integer> rank;
+    public DisjointSet (int n) {
+        rank = new ArrayList<>();
+        size = new ArrayList<>();
+        parent = new ArrayList<>();
         for (int i = 0; i <= n; i++) {
             size.add(1);
-            rank.add(0);
             parent.add(i);
         }
-    }
-    public int findUltimateParent (int node) {
+    } 
+    public int findUParent(int node) {
         if (node == parent.get(node)) {
             return node;
         }
-        int ultimateParent =  findUltimateParent(parent.get(node));
-        parenet.set(node, ultimateParent);
-        return parent.get(node);
+        int ul_node = findUParent(parent.get(node));
+        parent.set(node, ul_node);
+        return ul_node;
+    }
+    public void unionBySize(int u, int v) {
+        int ul_u = findUParent(u);
+        int ul_v = findUParent(v);
+        if (ul_u == ul_v) {
+            return;
+        }
+        if (size.get(ul_u) > size.get(ul_v)) {
+            parent.set(ul_v, ul_u);
+            size.set(ul_u, size.get(ul_v) + size.get(ul_u));
+        } else {
+            parent.set(ul_u, ul_v);
+            size.set(ul_v, size.get(ul_v) + size.get(ul_u));
+        }
     }
     public void unionByRank (int u, int v) {
         int ultimateParentOfU =  findUltimateParent(u);
@@ -33,20 +49,40 @@ class DisjointSet {
             rank.set(ultimateParentOfV, rankU + 1);
         }
     }
-    public void unionBySize (int u, int v) {
-        int ultimateParentOfU = findUltimateParent(u);
-        int ultimateParentOfV = findUltimateParent(v);
-        if (ultimateParentOfU == ultimateParentOfV) {
-            return;
+    //Krushal's Algorithm
+    private int spanningTree(int V, int E, List<List<int[]>> adj) {
+        class Edge implements Comparable<Edge> {
+            int dist;
+            int src;
+            int dst;
+            public Edge (int dist, int src, int dst) {
+                this.dist = dist;
+                this.src = src;
+                this.dst = dst;
+            }
+            public int compareTo(Edge compareEdge) {
+                return this.dist - compareEdge.dist;
+            }
         }
-        if (size.get(ultimateParentOfU) < size.get(ultimateParentOfV)) {
-            parent.set(ultimateParentOfU, ultimateParentOfV);
-            int sizeOfV = size.get(ultimateParentOfV);
-            size.set(ultimateParentOfV, sizeOfV + size.get(ultimateParentOfU));
-        } else {
-            parent.set(ultimateParentOfV, ultimateParentOfU);
-            int sizeOfU = size.get(ultimateParentOfU);
-            size.set(ultimateParentOfU, sizeOfU + size.get(ultimateParentOfV));
+        List<Edge> edges = new ArrayList<>();
+        for (int i = 0; i < adj.size(); i++) {
+            for (int[] edge : adj.get(i)) {
+                edges.add(new Edge(edge[1], i, edge[0]));
+            }
         }
+        Collections.sort(edges);
+        DisjointSet dsu = new DisjointSet(V);
+        int max_Wt = 0;
+        for (int i = 0; i < edges.size(); i++) {
+            int wt = edges.get(i).dist;
+            int src = edges.get(i).src;
+            int dst = edges.get(i).dst;
+            if (dsu.findUParent(src) != dsu.findUParent(dst)) {
+                max_Wt += wt;
+                dsu.union(src, dst);
+            }
+        }
+        return max_Wt;
     }
 }
+    
