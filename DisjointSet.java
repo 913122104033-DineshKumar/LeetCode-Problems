@@ -106,5 +106,43 @@ class DisjointSet {
         }
         return dsu.numberOfComponents();
     }
+    //Accounts Merge
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        int n = accounts.size();
+        Map<String, Integer> mails = new HashMap<>();
+        DisjointSet dsu = new DisjointSet(n);
+        for (int i = 0; i < n; i++) {
+            List<String> account = accounts.get(i);
+            for (int j = 1; j < account.size(); j++) {
+                String mail = account.get(j);
+                if (!mails.containsKey(mail)) {
+                    mails.put(mail, i);
+                } else {
+                    dsu.unionBySize(i, mails.get(mail));
+                }
+            }
+        }
+        List<List<String>> mergedMail = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            mergedMail.add(new ArrayList<>());
+        }
+        for (Map.Entry<String, Integer> personMail : mails.entrySet()) {
+            String mail = personMail.getKey();
+            int node = dsu.findParent(personMail.getValue());
+            mergedMail.get(node).add(mail);
+        }
+        List<List<String>> ans = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (mergedMail.get(i).size() == 0) {
+                continue;
+            }
+            Collections.sort(mergedMail.get(i));
+            List<String> temp = new ArrayList<>();
+            temp.add(accounts.get(i).get(0));
+            temp.addAll(mergedMail.get(i));
+            ans.add(new ArrayList<>(temp));
+        }
+        return ans;
+    }
 }
     
