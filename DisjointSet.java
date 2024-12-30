@@ -144,5 +144,39 @@ class DisjointSet {
         }
         return ans;
     }
+    //Number of Islands- II
+    public List<Integer> numOfIslands(int rows, int cols, int[][] operators) {
+        private boolean isValid (int nrow, int ncol, int n, int m) {
+            return nrow >= 0 && ncol >= 0 && nrow < n && ncol < m;
+        }
+        List<Integer> ans = new ArrayList<>();
+        DisjointSet ds = new DisjointSet(rows * cols);
+        boolean[][] visited = new boolean[rows][cols];
+        int[][] directions = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
+        int cnt = 0;
+        for (int[] operator : operators) {
+            int row = operator[0];
+            int col = operator[1];
+            if (visited[row][col]) {
+                ans.add(cnt);
+                continue;
+            }
+            cnt++;
+            visited[row][col] = true;
+            for (int[] direction : directions) {
+                int nrow = row + direction[0];
+                int ncol = col + direction[1];
+                if (isValid(nrow, ncol, rows, cols)) {
+                    if (visited[nrow][ncol]) {
+                        int pos = row * cols + col;
+                        int adjPos = nrow * cols + ncol;
+                        cnt -= ds.unionBySize(pos, adjPos);
+                    }
+                }
+            }
+            ans.add(cnt);
+        }
+        return ans;
+    }
 }
     
