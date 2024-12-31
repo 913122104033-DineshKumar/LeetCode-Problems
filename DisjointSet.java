@@ -178,5 +178,57 @@ class DisjointSet {
         }
         return ans;
     }
+    //Maximum Connected Group
+    public int MaxConnection(int grid[][]) {
+        int n = grid.length, m = grid[0].length;
+        int[][] directions = { { -1, 0 }, { 0, 1 }, { 1, 0 } , { 0, -1 }};
+        DisjointSet ds = new DisjointSet(n * m);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 1) {
+                    for (int[] direction : directions) {
+                        int row = direction[0];
+                        int col = direction[1];
+                        int adjRow = i + row;
+                        int adjCol = j + col;
+                        if (adjRow >= 0 && adjCol >= 0 && adjRow < n && adjCol < m
+                            && grid[adjRow][adjCol] == 1) {
+                            int pos = i * m + j;
+                            int adjPos = adjRow * m + adjCol;
+                            ds.unionBySize(pos, adjPos);
+                        }
+                    }
+                }
+            }
+        }
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 0) {
+                    int sum = 1;
+                    Set<Integer> parents = new HashSet<>();
+                    for (int[] direction : directions) {
+                        int row = direction[0];
+                        int col = direction[1];
+                        int adjRow = i + row;
+                        int adjCol = j + col;
+                        if (adjRow >= 0 && adjCol >= 0 && adjRow < n && adjCol < m
+                            && grid[adjRow][adjCol] == 1) {
+                            int adjPos = adjRow * m + adjCol;
+                            parents.add(ds.findParent(adjPos));
+                        }
+                    }
+                    for (int parent : parents) {
+                        sum += ds.sizeOfParent(parent);
+                    }
+                    ans = Math.max(ans, sum);
+                }
+            }
+        }
+        for (int cell = 0; cell < n * n; cell++) {
+            ans = Math.max(ans, ds.sizeOfParent(cell));
+        }
+        return ans;
+    }
 }
     
