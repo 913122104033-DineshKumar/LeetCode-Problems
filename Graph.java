@@ -1239,4 +1239,54 @@ public class Graph {
         }
         return sum;
     }
+    //Strongly Connected Components- Kosaraju's Algorithm
+	public int stronglyConnectedComponents(int V, ArrayList<ArrayList<Integer>> edges) {
+        private void dfs (int node, List<List<Integer>> adj, Stack<Integer> stack,
+			 boolean[] visited) {
+    		visited[node] = true;
+	    	for (int neighbour : adj.get(node)) {
+		    	if (!visited[neighbour]) {
+			    	dfs(neighbour, adj, stack, visited);
+			    }   
+		    }
+		    stack.push(node);
+	    }
+    	private static void traversal (int node, List<List<Integer>> adj, boolean[] visited) {
+	    	visited[node] = true;
+		    for (int neighbour : adj.get(node)) {
+			    if (!visited[neighbour]) {
+				    traversal(neighbour, adj, visited);
+			    }
+		    }
+	    }
+		List<List<Integer>> adj = new ArrayList<>();
+		List<List<Integer>> revAdj = new ArrayList<>();
+		for (int i = 0; i < V; i++) {
+			adj.add(new ArrayList<>());
+			revAdj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.size(); i++) {
+			int u = edges.get(i).get(0);
+			int v = edges.get(i).get(1);
+			adj.get(u).add(v);
+			revAdj.get(v).add(u);
+		}
+		Stack<Integer> stack = new Stack<>();
+		boolean[] visited = new boolean[V];
+		for (int node = 0; node < V; node++) {
+			if (!visited[node]) {
+				dfs(node, adj, stack, visited);
+			}
+		}
+		Arrays.fill(visited, false);
+		int ans = 0;
+		while (!stack.isEmpty()) {
+			int node = stack.pop();
+			if (!visited[node]) {
+				traversal(node, revAdj, visited);
+				ans++;
+			}
+		}
+		return ans;
+	}
 }
