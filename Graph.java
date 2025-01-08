@@ -1330,4 +1330,56 @@ public class Graph {
         dfs(0, -1, adj, insertionTime, lowestTime, visited, ans);
         return ans;
     }
+    //Articulation Points
+    public ArrayList<Integer> articulationPoints(int V, ArrayList<ArrayList<Integer>> adj)
+    {
+        private int time = 1;
+        private void dfs (int node, int parent, ArrayList<ArrayList<Integer>> adj, int[] insertionTime, int[] lowestTime, 
+        boolean[] visited, Set<Integer> articulationPoints) {
+            visited[node] = true;
+            insertionTime[node] = time;
+            lowestTime[node] = time;
+            time++;
+            int child = 0;
+            for (int neighbour : adj.get(node)) {
+                if (neighbour == parent) {
+                    continue;
+                }
+                if (visited[neighbour]) {
+                    lowestTime[node] = Math.min(
+                        lowestTime[node], 
+                        insertionTime[neighbour]
+                    );
+                } else {
+                    dfs (neighbour, node, adj, insertionTime, lowestTime, visited, 
+                    articulationPoints);
+                    lowestTime[node] = Math.min(
+                        lowestTime[neighbour], 
+                        lowestTime[node]
+                    );
+                    if (lowestTime[neighbour] >= insertionTime[node] && parent != -1) {
+                        articulationPoints.add(node);
+                    } 
+                child++;
+                }   
+            }
+            if (child > 1 && parent == -1) {
+                articulationPoints.add(node);
+            }
+        }
+        Set<Integer> articulationPoints = new HashSet<>();
+        boolean[] visited = new boolean[V];
+        int[] insertionTime = new int[V];
+        int[] lowestTime = new int[V];
+        dfs(0, -1, adj, insertionTime, lowestTime, visited, articulationPoints);
+        if (articulationPoints.size() == 0) {
+            return new ArrayList<>(Arrays.asList(-1));
+        }
+        ArrayList<Integer> ans = new ArrayList<>();
+        for (int ap : articulationPoints) {
+            ans.add(ap);
+        }
+        Collections.sort(ans);
+        return ans;
+    }
 }
