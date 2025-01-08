@@ -1289,4 +1289,45 @@ public class Graph {
 		}
 		return ans;
 	}
+    //Bridges in a Graph
+    public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+        private int time = 1;
+        private void dfs (int node, int parent, List<List<Integer>> adj, int[] insertionTime, 
+            int[] lowestTime, boolean[] visited, List<List<Integer>> ans) {
+            visited[node] = true;
+            insertionTime[node] = time;
+            lowestTime[node] = time;
+            time++;
+            for (int neighbour : adj.get(node)) {
+                if (neighbour == parent) {
+                    continue;
+                }
+                if (visited[neighbour]) {
+                    lowestTime[node] = Math.min(lowestTime[node], lowestTime[neighbour]);
+                } else {
+                    dfs (neighbour, node, adj, insertionTime, lowestTime, visited, ans);
+                    lowestTime[node] = Math.min(lowestTime[node], lowestTime[neighbour]);
+                    if (insertionTime[node] < lowestTime[neighbour]) {
+                        ans.add(Arrays.asList(node, neighbour));
+                    }
+                }
+            }
+        }
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < connections.size(); i++) {
+            int u = connections.get(i).get(0);
+            int v = connections.get(i).get(1);
+            adj.get(u).add(v);
+            adj.get(v).add(u);
+        }
+        List<List<Integer>> ans = new ArrayList<>();
+        boolean[] visited = new boolean[n];
+        int[] insertionTime = new int[n];
+        int[] lowestTime = new int[n];
+        dfs(0, -1, adj, insertionTime, lowestTime, visited, ans);
+        return ans;
+    }
 }
