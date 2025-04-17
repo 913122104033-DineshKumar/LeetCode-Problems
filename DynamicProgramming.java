@@ -297,4 +297,47 @@ public class DynamicProgramming {
         return dp[n - 1];
     }
 
+    // Memoization
+    private int triangleMemoization (int row, int col, List<List<Integer>> triangle, List<List<Integer>> dp) {
+        if (row == triangle.size() - 1) {
+            return triangle.get(row).get(col);
+        }
+        if (dp.get(row).get(col) != (int) 1e9) {
+            return dp.get(row).get(col);
+        }
+        int down = triangle.get(row).get(col) + triangleMemoization(row + 1, col, triangle, dp);
+        int diagonal = triangle.get(row).get(col) + triangleMemoization(row + 1, col + 1, triangle, dp);
+        int min = Math.min(down, diagonal);
+        dp.get(row).set(col, min);
+        return min;
+    }
+
+    // Space Optimization
+    private int triangleSpaceOptimization (List<List<Integer>> triangle) {
+        int n = triangle.size();
+        if (n == 1) {
+            return triangle.get(0).get(0);
+        }
+        List<Integer> dp = triangle.get(n - 1);
+        for (int row = n - 2; row > 0; row--) {
+            List<Integer> temp = new ArrayList<>();
+            for (int col = 0; col < row + 1; col++) {
+                if (row == 0 && col == 0) {
+                    dp.add(triangle.get(row).get(col));
+                    continue;
+                } else {
+                    int diagonal = triangle.get(row).get(col) + dp.get(col);
+                    int up = triangle.get(row).get(col) + dp.get(col + 1);
+                    temp.add(Math.min(up, diagonal));
+                }
+            }
+            dp = temp;
+        }
+        int min = (int) 1e9;
+        for (int val : dp) {
+            min = Math.min(min, val);
+        }
+        return min + triangle.get(0).get(0);
+    }
+
 }
