@@ -228,4 +228,73 @@ public class DynamicProgramming {
         return dp[m - 1][n - 1];
     }
 
+    // Memoization
+    private int minPathSumMemoization (int row, int col, int[][] dp, int[][] grid) {
+        if (row == 0 && col == 0) {
+            return grid[0][0];
+        }
+        if (row < 0 || col < 0) {
+            return (int) 1e9;
+        }
+        if (dp[row][col] != Integer.MAX_VALUE) {
+            return dp[row][col];
+        }
+        int up = grid[row][col] + minPathSumMemoization(row - 1, col, dp, grid);
+        int left = grid[row][col] + minPathSumMemoization(row, col - 1, dp, grid);
+        return dp[row][col] = Math.min(up, left);
+    }
+
+    // Tabulation
+    private int minPathSumTabulation (int m, int n, int[][] grid) {
+        int[][] dp = new int[m][n];
+        dp[0][0] = grid[0][0];
+        for (int row = 0; row < m; row++)  {
+            for (int col = 0; col < n; col++) {
+                if (row == 0 && col == 0) {
+                    dp[row][col] = grid[row][col];
+                } else {
+                    int up = grid[row][col];
+                    int left = grid[row][col];
+                    if (row > 0) {
+                        up += dp[row - 1][col];
+                    } else {
+                        up += (int) 1e9;
+                    }
+                    if (col > 0) {
+                        left += dp[row][col - 1];
+                    } else {
+                        left += (int) 1e9;
+                    }
+                    dp[row][col] = Math.min(up, left);
+                }
+            }
+        }
+        return dp[m - 1][n - 1];
+    }
+
+    // Space Optimization
+    private int minPathSumSpaceOptimization (int m, int n, int[][] grid) {
+        int[] dp = new int[n];
+        Arrays.fill(dp, (int) 1e9);
+        for (int row = 0; row < m; row++) {
+            int[] temp = new int[n];
+            for (int col = 0; col < n; col++) {
+                if (row == 0 && col == 0) {
+                    temp[0] = grid[0][0];
+                } else {
+                    int up = grid[row][col] + dp[col];
+                    int left = grid[row][col];
+                    if (col > 0) {
+                        left += temp[col - 1];
+                    } else {
+                        left += (int) 1e9;
+                    }
+                    temp[col] = Math.min(up, left);
+                }
+            }
+            dp = temp;
+        }
+        return dp[n - 1];
+    }
+
 }
