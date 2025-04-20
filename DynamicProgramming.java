@@ -340,4 +340,85 @@ public class DynamicProgramming {
         return min + triangle.get(0).get(0);
     }
 
+    // Memoization
+	private static int maximumChocolatesMemoization (int row, int col1, int col2, int m, int n, int[][] grid, 
+	int[][][] dp) {
+		if (col1 < 0 || col1 >= n || col2 < 0 || col2 >= n) {
+			return -(int) 1e9;
+		}
+		if (row == m - 1) {
+			if (col1 == col2) {
+				return grid[row][col1];
+			}
+			return grid[row][col1] + grid[row][col2];
+		}
+		if (dp[row][col1][col2] != -1) {
+			return dp[row][col1][col2];
+		}
+		int max = 0;
+		for (int alice = -1; alice <= 1; alice++) {
+			for (int bob = -1; bob <= 1; bob++) {
+				if (col1 == col2) {
+					max = Math.max(
+						max, 
+						grid[row][col1] + 
+						maximumChocolatesMemoization(row + 1, col1 + alice, col2 + bob, 
+						m, n, grid, dp)
+					);
+				} else {
+					max = Math.max(
+						max, 
+						grid[row][col1] + grid[row][col2] +
+						maximumChocolatesMemoization(row + 1, col1 + alice, col2 + bob, 
+						m, n, grid, dp)
+					);
+				}
+			}
+		}
+		return dp[row][col1][col2] = max;
+	}
+
+	// Tabulation
+	private static int maximumChocolatesTabulation (int r, int c, int[][] grid) {
+		int[][][] dp = new int[r][c][c];
+		for (int col1 = 0; col1 < c; col1++) {
+			for (int col2 = 0; col2 < c; col2++) {
+				if (col1 == col2) {
+					dp[r - 1][col1][col2] = grid[r - 1][col1];
+				} else {
+					dp[r - 1][col1][col2] = grid[r - 1][col1] + grid[r - 1][col2];
+				}
+			}
+		}
+		for (int row = r - 2; row >= 0; row--) {
+			for (int col1 = 0; col1 < c; col1++) {
+				for (int col2 = 0; col2 < c; col2++) {
+					int max = 0;
+					for (int alice = -1; alice <= 1; alice++) {
+						for (int bob = -1; bob <= 1; bob++) {
+							int val = -(int) 1e9;
+							if (col1 == col2) {
+								if (col1 + alice >= 0 && col1 + alice < c &&
+									col2 + bob >= 0 && col2 + bob < c) {
+									val = grid[row][col1] + 
+									dp[row + 1][col1 + alice][col2 + bob];
+								}
+								max = Math.max(max, val);
+							} else {
+								if (col1 + alice >= 0 && col1 + alice < c &&
+									col2 + bob >= 0 && col2 + bob < c) {
+									val = grid[row][col1] + grid[row][col2] +
+									dp[row + 1][col1 + alice][col2 + bob];
+								}
+								max = Math.max(max, val);
+							}
+						}
+					}
+					dp[row][col1][col2] = max;
+				}
+			}
+		}
+		return dp[0][0][c - 1];
+	}
+
 }
