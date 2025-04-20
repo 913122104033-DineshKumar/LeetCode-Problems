@@ -463,4 +463,47 @@ public class DynamicProgramming {
         return dp[n - 1][k];
     }
 
+    // Memoization
+    private boolean canPartitionMemoization (int idx, int target, int[] nums, int[][] dp) {
+        if (target == 0) {
+            return true;
+        }
+        if (idx == 0) {
+            return nums[idx] == target;
+        }
+        if (dp[idx][target] != -1) {
+            return dp[idx][target] == 1 ? true : false;
+        }
+        boolean notTake = canPartitionMemoization(idx - 1, target, nums, dp);
+        boolean take = false;
+        if (nums[idx] <= target) {
+            take = canPartitionMemoization(idx - 1, target - nums[idx], nums, dp);
+        }
+        dp[idx][target] = (notTake || take) ? 1 : 0;
+        return notTake || take;
+    }
+
+    // Space Optimization
+    private boolean canPartitionSpaceOptimization (int n, int k, int[] nums) {
+        boolean[] dp = new boolean[k + 1];
+        dp[0] = true;
+        if (nums[0] <= k) {
+            dp[nums[0]] = true;
+        }
+        for (int row = 1; row < n; row++) {
+            boolean[] cur = new boolean[k + 1];
+            cur[0] = true;
+            for (int target = 1; target  <= k; target++) {
+                boolean notTake = dp[target];
+                boolean take = false;
+                if (nums[row] <= target) {
+                    take = dp[target - nums[row]];
+                }
+                cur[target] = notTake || take;
+            }
+            dp = cur;
+        }
+        return dp[k];
+    }
+
 }
