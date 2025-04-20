@@ -421,4 +421,46 @@ public class DynamicProgramming {
 		return dp[0][0][c - 1];
 	}
 
+    // Memoization
+    private static boolean subsetSumToKMemoization (int idx, int target, int[] arr, int[][] dp) {
+        if (target == 0) {
+            return true;
+        }
+        if (idx == 0) {
+            return arr[idx] == target;
+        }
+        if (dp[idx][target] != -1) {
+            return dp[idx][target] == 0 ? false : true;
+        }
+        boolean notTake = subsetSumToKMemoization(idx - 1, target, arr, dp);
+        boolean take = false;
+        if (target >= arr[idx]) {
+            take = subsetSumToKMemoization(idx - 1, target - arr[idx], arr, dp);
+        }
+        dp[idx][target] = (notTake || take) ? 1 : 0;
+        return notTake || take;
+    }
+
+    // Tabulation
+    private static boolean subsetSumToKTabulation (int n, int k, int[] arr) {
+        boolean[][] dp = new boolean[n][k + 1];
+        for (int row = 0; row < n; row++) {
+            dp[row][0] = true;
+        }
+        if (arr[0] <= k) {
+            dp[0][arr[0]] = true;
+        }
+        for (int row = 1; row < n; row++) {
+            for (int target = 1; target <= k; target++) {
+                boolean notTake = dp[row - 1][target];
+                boolean take = false;
+                if (target >= arr[row]) {
+                    take = dp[row - 1][target - arr[row]];
+                }
+                dp[row][target] = notTake || take;
+            }
+        }
+        return dp[n - 1][k];
+    }
+
 }
