@@ -603,4 +603,44 @@ public class DynamicProgramming {
         return dp[w];
     }
 
+    private int coinChangeMemoization (int idx, int target, int[] coins, int[][] dp) {
+        if (idx == 0) {
+            if (target % coins[idx] == 0) {
+                return  target / coins[idx];
+            } 
+            return (int) 1e9;
+        }
+        if (dp[idx][target] != (int) 1e9) {
+            return dp[idx][target];
+        }
+        int notTake = coinChangeMemoization(idx - 1, target, coins, dp);
+        int take = (int) 1e9;
+        if (coins[idx] <= target) {
+            take = 1 + coinChangeMemoization(idx, target - coins[idx], coins, dp);
+        }
+        return dp[idx][target] = Math.min(notTake, take);
+    }
+
+    private int coinChangeTabulation (int n, int[] coins, int target) {
+        int[][] dp = new int[n][target + 1];
+        for (int T = 0; T <= target; T++) {
+            if (T % coins[0] == 0) {
+                dp[0][T] = T / coins[0];
+            } else {
+                dp[0][T] = (int) 1e9;
+            }
+        }
+        for (int row = 1; row < n; row++) {
+            for (int T = 0; T <= target; T++) {
+                int notTake = dp[row - 1][T];
+                int take = (int) 1e9;
+                if (coins[row] <= T) {
+                    take = 1 + dp[row][T - coins[row]];
+                } 
+                dp[row][T] = Math.min(notTake, take);
+            }
+        }
+        return dp[n - 1][target];
+    }
+
 }
