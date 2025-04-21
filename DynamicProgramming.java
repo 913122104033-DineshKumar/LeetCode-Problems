@@ -506,4 +506,101 @@ public class DynamicProgramming {
         return dp[k];
     }
 
+     private static int findWaysMemoization (int idx, int target, int[] nums, int[][] dp) {
+        if (idx == 0) {
+            if (target == 0 && nums[idx] == 0) {
+                return 2;
+            }
+            if (target == 0 || target == nums[idx]) {
+                return 1;
+            }
+            return 0;
+        }
+        if (dp[idx][target] != -1) {
+            return dp[idx][target];
+        }
+        int notTake = findWaysMemoization(idx - 1, target, nums, dp);
+        int take = 0;
+        if (nums[idx] <= target) {
+            take = findWaysMemoization(idx - 1, target - nums[idx], nums, dp);
+        }
+        return dp[idx][target] = (notTake + take) % (int) (1e9 + 7);
+    }
+
+    private static int findWaysTabulation (int n, int[] nums, int k) {
+        int[][] dp = new int[n][k + 1];
+        for (int row = 0; row < n; row++) {
+            dp[row][0] = 1;
+        }
+        if (nums[0] <= k) {
+            dp[0][nums[0]] = 1;
+        }
+        for (int row = 1; row < n; row++) {
+            for (int target = 1; target <= k; target++) {
+                int notTake = dp[row - 1][target];
+                int take = 0;
+                if (nums[row] <= target) {
+                    take = dp[row - 1][target - nums[row]];
+                }
+                dp[row][target] = notTake + take;
+            }
+        }
+        return dp[n - 1][k];
+    }
+
+
+    static int knapsackMemoization (int idx, int w, int[] wt, int[] val, int[][] dp) {
+        if (idx == 0) {
+            if (wt[0] <= w) {
+                return val[0];
+            }
+            return 0;
+        }
+        if (dp[idx][w] != -1) {
+            return dp[idx][w];
+        }
+        int notTake = knapsackMemoization(idx - 1, w, wt, val, dp);
+        int take = -(int) 1e9;
+        if (wt[idx] <= w) {
+            take = val[idx] + knapsackMemoization(idx - 1, w - wt[idx], wt, val, dp);
+        }
+        return dp[idx][w] = Math.max(notTake, take);
+    } 
+
+    static int knapsackTabulation (int n, int[] wt, int[] val, int w) {
+        int[][] dp = new int[n][w + 1];
+        for (int i = wt[0]; i <= w; i++) {
+            dp[0][i] = val[0];
+        }
+        for (int row = 1; row < n; row++) {
+            for (int weight = 0; weight <= w; weight++) {
+                int notTake = dp[row - 1][weight];
+                int take = -(int) 1e9;
+                if (wt[row] <= weight) {
+                    take = val[row] + dp[row - 1][weight - wt[row]];
+                }
+                dp[row][weight] = Math.max(notTake, take);
+            }
+        }
+        return dp[n - 1][w];
+    }
+
+    static int knapsackSpaceOptimization (int n, int[] wt, int[] val, int w) {
+        int[] dp = new int[w + 1];
+        for (int i = wt[0]; i <= w; i++) {
+            dp[i] = val[0];
+        }
+        for (int row = 1; row < n; row++) {
+            for (int weight = w; weight >= 0; weight--) {
+                int notTake = dp[weight];
+                int take = -(int) 1e9;
+                if (wt[row] <= weight) {
+                    take = val[row] + dp[weight - wt[row]];
+                }
+                dp[weight] = Math.max(notTake, take);
+            }
+        }
+        return dp[w];
+    }
+
 }
