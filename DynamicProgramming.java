@@ -643,4 +643,31 @@ public class DynamicProgramming {
         return dp[n - 1][target];
     }
 
+    public static int targetSum(int n, int target, int[] arr) {
+        int totSum = 0;
+        for (int num : arr) {
+            totSum += num;
+        }
+        if ((totSum - target) % 2 == 1) {
+            return 0;
+        }
+    	Map<Integer, Integer> dp = new HashMap<>();
+        int s2 = (totSum - target) / 2;
+        dp.put(0, 1);
+        Map<Integer, Integer> cur = new HashMap<>();
+        for (int row = 0; row < n; row++) {
+            cur.clear();
+            for (int T = 0; T <= s2; T++) {
+                int notTake = dp.getOrDefault(T, 0);
+                int take = 0;
+                if (arr[row] <= T) {
+                    take = dp.getOrDefault(T - arr[row], 0);
+                }
+                cur.put(T, notTake + take);
+            }
+            dp = new HashMap<>(cur);
+        }
+        return dp.getOrDefault(s2, 0);
+    }
+
 }
