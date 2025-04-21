@@ -670,4 +670,27 @@ public class DynamicProgramming {
         return dp.getOrDefault(s2, 0);
     }
 
+    public int change(int amount, int[] coins) {
+        int n = coins.length;
+        int[] dp = new int[amount + 1];
+        for (int am = 0; am <= amount; am++) {
+            if (am % coins[0] == 0) {
+                dp[am] = 1;
+            }
+        }
+        for (int row = 1; row < n; row++) {
+            int[] cur = new int[amount + 1];
+            for (int am = 0; am <= amount; am++) {
+                int notTake = dp[am];
+                int take = 0;
+                if (coins[row] <= am) {
+                    take = cur[am - coins[row]];
+                }
+                cur[am] = notTake + take;
+            }
+            dp = cur;
+        }
+        return dp[amount];
+    }
+
 }
