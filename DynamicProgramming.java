@@ -693,4 +693,41 @@ public class DynamicProgramming {
         return dp[amount];
     }
 
+    private static int unboundedKnapsackMemoization (int idx, int w, 
+    int[] profit, int[] weight, int[][] dp) {
+        if (idx == 0) {
+            return (w / weight[idx]) * profit[idx];
+        }
+        if (dp[idx][w] != -(int) 1e9) {
+            return dp[idx][w];
+        }
+        int notTake = unboundedKnapsackMemoization(idx - 1, w, profit, weight, dp);
+        int take = -(int) 1e9;
+        if (weight[idx] <= w) {
+            take = profit[idx] + 
+            unboundedKnapsackMemoization(idx, w - weight[idx], profit, weight, dp);
+        }
+        return dp[idx][w] = Math.max(notTake, take);
+    }
+
+    public static int unboundedKnapsack(int n, int w, int[] profit, int[] weight) {
+        int[] dp = new int[w + 1];
+        for (int wt = weight[0]; wt <= w; wt++) {
+            dp[wt] = wt / weight[0] * profit[0];
+        }
+        for (int row = 1; row < n; row++) {
+            int[] cur = new int[w + 1];
+            for (int wt = 0; wt <= w; wt++) {
+                int notTake = dp[wt];
+                int take = -(int) 1e9;
+                if (weight[row] <= wt) {
+                    take = profit[row] + cur[wt - weight[row]];
+                }
+                cur[wt] = Math.max(notTake, take);
+            }
+            dp = cur;
+        }
+        return dp[w];
+    }
+
 }
