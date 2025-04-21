@@ -730,4 +730,38 @@ public class DynamicProgramming {
         return dp[w];
     }
 
+    private static int cutRodMemoization (int idx, int target, int[] price, int[][] dp) {
+		if (idx == 0) {
+			return target * price[idx];
+		}
+		if (dp[idx][target] != -(int) 1e9) {
+			return dp[idx][target];
+		}
+		int notTake = cutRodMemoization(idx - 1, target, price, dp);
+		int take = -(int) 1e9;
+		if (idx + 1 <= target) {
+			take = price[idx] + 
+			cutRodMemoization(idx, target - (idx + 1), price, dp);
+		}
+		return dp[idx][target] = Math.max(notTake, take);
+	}
+
+	private static int cutRodTabulation (int n, int[] price) {
+		int[][] dp = new int[n][n + 1];
+		for (int len = 0; len <= n; len++) {
+			dp[0][len] = len * price[0];
+		}
+		for (int row = 1; row < n; row++) {
+			for (int target = 0; target <= n; target++) {
+				int notTake = dp[row - 1][target];
+				int take = -(int) 1e9;
+				if (row + 1 <= target) {
+					take = price[row] + dp[row][target - (row + 1)];
+				}
+				dp[row][target] = Math.max(notTake, take);
+			}
+		}
+		return dp[n - 1][n];
+	}
+
 }
