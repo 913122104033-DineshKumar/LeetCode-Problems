@@ -764,4 +764,47 @@ public class DynamicProgramming {
 		return dp[n - 1][n];
 	}
 
+    private int lcsMemoization (int idx1, int idx2, String s1, String s2, int[][] dp) {
+        if (idx1 < 0 || idx2 < 0) {
+            return 0;
+        }
+        if (dp[idx1][idx2] != -1) {
+            return dp[idx1][idx2];
+        }
+        if (s1.charAt(idx1) == s2.charAt(idx2)) {
+            return dp[idx1][idx2] = 1 + lcsMemoization(idx1 - 1, idx2 - 1, s1, s2, dp);
+        }
+        return dp[idx1][idx2] = Math.max(lcsMemoization(idx1 - 1, idx2, s1, s2, dp), lcsMemoization(idx1, idx2 - 1, s1, s2, dp));
+    }
+
+    private int lcsTabulation (int n, int m, String s1, String s2) {
+        int[][] dp = new int[n + 1][m + 1];
+        for (int idx1 = 1; idx1 <= n; idx1++) {
+            for (int idx2 = 1; idx2 <= m; idx2++) {
+                if (s1.charAt(idx1 - 1) == s2.charAt(idx2 - 1)) {
+                    dp[idx1][idx2] = 1 + dp[idx1 - 1][idx2 - 1];
+                } else {
+                    dp[idx1][idx2] = Math.max(dp[idx1 - 1][idx2], dp[idx1][idx2 - 1]);
+                }
+            }
+        }
+        return dp[n][m];
+    }
+
+    private int lcsSpaceOptimization (int n, int m, String s1, String s2) {
+        int[] dp = new int[m + 1];
+        for (int idx1 = 1; idx1 <= n; idx1++) {
+            int[] cur = new int[m + 1];
+            for (int idx2 = 1; idx2 <= m; idx2++) {
+                if (s1.charAt(idx1 - 1) == s2.charAt(idx2 - 1)) {
+                    cur[idx2] = 1 + dp[idx2 - 1];
+                } else {
+                    cur[idx2] = Math.max(dp[idx2], cur[idx2 - 1]);
+                }
+            }
+            dp = cur;
+        }
+        return dp[m];
+    }
+
 }
