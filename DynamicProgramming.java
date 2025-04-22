@@ -807,4 +807,22 @@ public class DynamicProgramming {
         return dp[m];
     }
 
+    public static int longestCommonSubstring(String s1, String s2){
+        int n = s1.length();
+        int m = s2.length();
+        int[][] dp = new int[n + 1][m + 1];
+        int ans = 0;
+        for (int row = 1; row <= n; row++) {
+            for (int col = 1; col <= m; col++) {
+                if (s1.charAt(row -1) == s2.charAt(col - 1)) {
+                    dp[row][col] = 1 + dp[row - 1][col - 1];
+                } else {
+                    dp[row][col] = 0;
+                }
+                ans = Math.max(ans, dp[row][col]);
+            }
+        }
+        return ans;
+    }
+
 }
