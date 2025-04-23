@@ -877,4 +877,41 @@ public class DynamicProgramming {
         return n + m - (2 * dp[m]);
     }
 
+    public String shortestCommonSupersequence(String s, String t) {
+        int n = s.length();
+        int m = t.length();
+        int[][] dp = new int[n + 1][m + 1];
+        for (int ind1 = 1; ind1 <= n; ind1++) {
+            for (int ind2 = 1; ind2 <= m; ind2++) {
+                if (s.charAt(ind1 - 1) == t.charAt(ind2 - 1)) {
+                    dp[ind1][ind2] = 1 + dp[ind1 - 1][ind2 - 1];
+                } else {
+                    dp[ind1][ind2] = Math.max(dp[ind1 - 1][ind2], dp[ind1][ind2 - 1]);
+                }
+            }
+        }
+        int ind1 = n, ind2 = m;
+        StringBuilder sb = new StringBuilder();
+        while (ind1 > 0 && ind2 > 0) {
+            if (s.charAt(ind1 - 1) == t.charAt(ind2 - 1)) {
+                sb.append(s.charAt(ind1 - 1));
+                ind1--;
+                ind2--;
+            } else if (dp[ind1 - 1][ind2] > dp[ind1][ind2 - 1]) {
+                sb.append(s.charAt(ind1 - 1));
+                ind1--;
+            } else {
+                sb.append(t.charAt(ind2 - 1));
+                ind2--;
+            }
+        }
+        while (ind1-- > 0) {
+            sb.append(s.charAt(ind1));
+        } 
+        while (ind2-- > 0) {
+            sb.append(t.charAt(ind2));
+        }
+        return sb.reverse().toString();
+    }
+
 }
