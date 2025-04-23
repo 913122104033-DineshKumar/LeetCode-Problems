@@ -914,4 +914,27 @@ public class DynamicProgramming {
         return sb.reverse().toString();
     }
 
+    private int numDistinctMemoization (int ind1, int ind2, String s, String t, int[][] dp) {
+        if (ind2 < 0) {
+            return ind1 + 1;
+        }
+        if (ind1 < 0) {
+            return ind2 + 1;
+        }
+        if (dp[ind1][ind2] != -1) {
+            return dp[ind1][ind2];
+        }
+        int match = (int) 1e9;
+        int notMatch = (int) 1e9;
+        if (s.charAt(ind1) == t.charAt(ind2)) {
+            match = numDistinctMemoization(ind1 - 1, ind2 - 1, s, t, dp);
+        } else {
+            int insert = numDistinctMemoization(ind1, ind2 - 1, s, t, dp);
+            int delete = numDistinctMemoization(ind1 - 1, ind2, s, t, dp);
+            int replace = numDistinctMemoization(ind1 - 1, ind2 - 1, s, t, dp);
+            notMatch = 1 + Math.min(insert, Math.min(delete, replace));
+        }
+        return dp[ind1][ind2] = Math.min(match, notMatch);
+    }
+
 }
