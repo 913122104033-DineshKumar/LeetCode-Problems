@@ -937,4 +937,59 @@ public class DynamicProgramming {
         return dp[ind1][ind2] = Math.min(match, notMatch);
     }
 
+    private boolean canMatch (int ind1, int ind2, String s, String p, int[][] dp) {
+        if (ind1 < 0 && ind2 < 0) {
+            return true;
+        }
+        if (ind1 < 0 && ind2 >= 0) {
+            return false;
+        }
+        if (ind2 < 0 && ind1 >= 0) {
+            for (int ind = 0; ind <= ind1; ind++) {
+                if (s.charAt(ind) != '*') {
+                    return false;
+                }
+            }
+            return true;
+        }
+        if (dp[ind1][ind2] != -1) {
+            return dp[ind1][ind2] == 1 ? true : false;
+        }
+        boolean match = false;
+        boolean notMatch = false;
+        if ((s.charAt(ind1) == p.charAt(ind2)) || s.charAt(ind1) == '?') {
+            match = canMatch(ind1 - 1, ind2 - 1, s, p, dp);
+        }
+        if (s.charAt(ind1) == '*') {
+            notMatch = canMatch(ind1 - 1, ind2, s, p, dp) || canMatch(ind1, ind2 - 1, s, p, dp);
+        }
+        dp[ind1][ind2] = (match || notMatch) ? 1 : 0;
+        return match || notMatch;
+    }
+
+    private boolean canMatchTabulation (int n, int m, String s, String p) {
+        boolean[][] dp = new boolean[n + 1][m + 1];
+        dp[0][0] = true;
+        for (int ind = 1; ind <= n; ind++) {
+            boolean flag = true;
+            for (int i = 1; i <= ind; i++)  {
+                if (s.charAt(i - 1) != '*') {
+                    flag = false;
+                    break;
+                }
+            }
+            dp[ind][0] = flag;
+        }
+        for (int ind1 = 1; ind1 <= n; ind1++) {
+            for (int ind2 = 1; ind2 <= m; ind2++) {
+                if (s.charAt(ind1 - 1) == p.charAt(ind2 - 1) || s.charAt(ind1 - 1) == '?') {
+                    dp[ind1][ind2] = dp[ind1 - 1][ind2 - 1];
+                } else if (s.charAt(ind1 - 1) == '*') {
+                    dp[ind1][ind2] = dp[ind1 - 1][ind2] || dp[ind1][ind2 - 1];
+                }
+            }
+        }
+        return dp[n][m];
+    }
+
 }
