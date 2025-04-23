@@ -825,4 +825,38 @@ public class DynamicProgramming {
         return ans;
     }
 
+    private int makeStringPalindromeSpaceOptimization (String s1, String s2, int n) {
+        int[] dp = new int[n + 1];
+        for (int idx1 = 1; idx1 <= n; idx1++) {
+            int[] cur = new int[n + 1];
+            for (int idx2 = 1; idx2 <= n; idx2++) {
+                if (s1.charAt(idx1 - 1) == s2.charAt(idx2 - 1)) {
+                    cur[idx2] = 1 + dp[idx2 - 1];
+                } else {
+                    cur[idx2] = Math.max(dp[idx2], cur[idx2 - 1]);
+                }
+            }
+            dp = cur;
+        }
+        return n - dp[n];
+    }
+
+    public int minInsertionsToMakeStringPalindrome(String s1) {
+        int n = s1.length();
+        StringBuilder sb = new StringBuilder(s1);
+        String s2 = new String(sb.reverse());
+        return makeStringPalindromeSpaceOptimization(s1, s2, n);
+        int[][] dp = new int[n + 1][n + 1];
+        for (int idx1 = 1; idx1 <= n; idx1++) {
+            for (int idx2 = 1; idx2 <= n; idx2++) {
+                if (s1.charAt(idx1 - 1) == s2.charAt(idx2 - 1)) {
+                    dp[idx1][idx2] = 1 + dp[idx1 - 1][idx2 - 1];
+                } else {
+                    dp[idx1][idx2] = Math.max(dp[idx1 - 1][idx2], dp[idx1][idx2 - 1]);
+                }
+            }
+        }
+        return n - dp[n][n];
+    }
+
 }
