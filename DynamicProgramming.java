@@ -992,4 +992,44 @@ public class DynamicProgramming {
         return dp[n][m];
     }
 
+    private int maxProfitMemoization(int ind, int buy, int n, int[] prices, int[][] dp) {
+        if (ind == n) {
+            return 0;
+        }
+        if (dp[ind][buy] != -1) {
+            return dp[ind][buy];
+        }
+        int profit;
+        if (buy == 1) {
+            int take = -prices[ind] + maxProfitMemoization(ind + 1, 0, n, prices, dp);
+            int notTake = maxProfitMemoization(ind + 1, 1, n, prices, dp);
+            profit = Math.max(take, notTake);
+        } else {
+            int take = prices[ind] + maxProfitMemoization(ind + 1, 1, n, prices, dp);
+            int notTake = maxProfitMemoization(ind + 1, 0, n, prices, dp);
+            profit = Math.max(take, notTake);
+        }
+        return dp[ind][buy] = profit;
+    }
+
+    private int maxProfitTabulation (int n, int[] prices) {
+        int[][] dp = new int[n + 1][2];
+        for (int ind = n - 1; ind >= 0; ind--) {
+            for (int buy = 0; buy <= 1; buy++) {
+                int profit;
+                if (buy == 0) {
+                    int take = prices[ind] + dp[ind + 1][1];
+                    int notTake = dp[ind + 1][0];
+                    profit = Math.max(take, notTake);
+                } else {    
+                    int take = -prices[ind] + dp[ind + 1][0];
+                    int notTake = dp[ind + 1][1];
+                    profit = Math.max(take, notTake);
+                }
+                dp[ind][buy] = profit;
+            }
+        }
+        return dp[0][1];
+    }
+
 }
