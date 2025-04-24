@@ -1077,4 +1077,28 @@ public class DynamicProgramming {
         return dp[0][0][2];
     }
 
+    private int maxProfitTabulationIV(int n, int k, int[] prices) {
+        int[][] dp = new int[2][k + 1];
+        for (int ind = n - 1; ind >= 0; ind--) {
+            int[][] cur = new int[2][k + 1];
+            for (int buy = 0; buy <= 1; buy++) {
+                for (int limit = 1; limit <= k; limit++) {
+                    int profit;
+                    if (buy == 0) {
+                        int take = -prices[ind] + dp[1][limit];
+                        int notTake = dp[0][limit];
+                        profit = Math.max(take, notTake);
+                    } else {
+                        int take = prices[ind] + dp[0][limit - 1];
+                        int notTake = dp[1][limit];
+                        profit = Math.max(take, notTake);
+                    }
+                    cur[buy][limit] = profit;
+                }
+            }
+            dp = cur;
+        }
+        return dp[0][k];
+    }
+
 }
