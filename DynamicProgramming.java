@@ -1101,4 +1101,66 @@ public class DynamicProgramming {
         return dp[0][k];
     }
 
+    private int LISMemoization(int ind, int prevInd, int n, int[] nums, int[][] dp) {
+        if (ind == n) {
+            return 0;
+        }
+        if (dp[ind][prevInd + 1] != -1) {
+            return dp[ind][prevInd + 1];
+        }
+        int notTake = LISMemoization(ind + 1, prevInd, n, nums, dp);
+        int take = 0;
+        if (prevInd == -1 || nums[prevInd] < nums[ind]) {
+            take = 1 + LISMemoization(ind + 1, ind, n, nums, dp);
+        }
+        return dp[ind][prevInd + 1] = Math.max(notTake, take);
+    }
+
+    private int LISTabulation(int n, int[] nums) {
+        int[][] dp = new int[n + 1][n + 1];
+        for (int ind = n - 1; ind >= 0; ind--) {
+            for (int prevInd = ind - 1; prevInd >= -1; prevInd--) {
+                int notTake = dp[ind + 1][prevInd + 1];
+                int take = 0;
+                if (prevInd == -1 || nums[prevInd] < nums[ind]) {
+                    take = 1 + dp[ind + 1][ind + 1];
+                }
+                dp[ind][prevInd + 1] = Math.max(notTake, take);
+            }
+        }
+        return dp[0][0];
+    }
+
+    private int LISSpaceOptimized (int n, int[] nums) {
+        int[] dp = new int[n];
+        int[] hash = new int[n];
+        for (int ind = 0; ind < n; ind++) {
+            dp[ind] = 1;
+            hash[ind] = ind;
+        }
+        for (int ind = 1; ind < n; ind++) {
+            for (int idx = 0; idx < ind; idx++) {
+                if (nums[idx] < nums[ind]) {
+                    if (dp[ind] < 1 + dp[idx]) {
+                        hash[ind] = idx;
+                        dp[ind] = 1 + dp[idx];
+                    }
+                }
+            }
+        }
+        int ans = 1;
+        int idx = 0;
+        for (int ind = 0; ind < n; ind++) {
+            if (ans < dp[ind]) {
+                ans = dp[ind];
+                idx = ind;
+            }
+        }
+        while (hash[idx] != idx) {
+            System.out.println(nums[idx]);
+            idx = hash[idx];
+        }
+        return ans;
+    }
+
 }
