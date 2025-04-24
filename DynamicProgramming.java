@@ -1163,4 +1163,40 @@ public class DynamicProgramming {
         return ans;
     }
 
+    public List<Integer> largestDivisibleSubset(int[] nums) {
+        Arrays.sort(nums);
+        int n = nums.length;
+        int[] dp = new int[n];
+        int[] hash = new int[n];
+        for (int ind = 0; ind < n; ind++) {
+            dp[ind] = 1;
+            hash[ind] = ind;
+        }
+        int ans = 1;
+        int lastInd = -1;
+        for (int ind = 1; ind < n; ind++) {
+            for (int prev = 0; prev < ind; prev++) {
+                if ((nums[prev] % nums[ind] == 0) || (nums[ind] % nums[prev] == 0) && dp[ind] < 1 + dp[prev]) {
+                    dp[ind] = 1 + dp[prev];
+                    hash[ind] = prev;
+                }
+            }
+            if (dp[ind] > ans) {
+                ans = dp[ind];
+                lastInd = ind;
+            }
+        }
+        List<Integer> subset = new ArrayList<>();
+        if (lastInd == -1) {
+            return new ArrayList<>(Arrays.asList(nums[0]));
+        }
+        while (hash[lastInd] != lastInd) {
+            subset.add(nums[lastInd]);
+            lastInd = hash[lastInd];
+        }
+        subset.add(nums[lastInd]);
+        Collections.reverse(subset);
+        return subset;
+    }
+
 }
