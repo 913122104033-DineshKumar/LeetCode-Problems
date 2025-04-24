@@ -1199,4 +1199,37 @@ public class DynamicProgramming {
         return subset;
     }
 
+    public int longestStrChain(String[] words) {
+        private boolean isSubsequence (String s1, String s2) {
+            int ind1 = 0, ind2 = 0;
+            int n = s1.length(), m = s2.length();
+            if (n > m || m - n != 1) {
+                return false;
+            }
+            while (ind1 < n && ind2 < m) {
+                if (s1.charAt(ind1) == s2.charAt(ind2)) {
+                    ind1++;
+                    ind2++;
+                } else {
+                    ind2++;
+                }
+            }
+            return ind1 == n;
+        }
+        int n = words.length;
+        int[] dp = new int[n];
+        Arrays.sort(words, Comparator.comparingInt(String :: length));
+        Arrays.fill(dp, 1);
+        int ans = 1;
+        for (int ind = 1; ind < n; ind++) {
+            for (int prev = 0; prev < ind; prev++) {
+                if (isSubsequence(words[prev], words[ind])) {
+                    dp[ind] = Math.max(dp[ind], 1 + dp[prev]);
+                }
+            }
+            ans = Math.max(ans, dp[ind]);
+        }
+        return ans;
+    }
+
 }
