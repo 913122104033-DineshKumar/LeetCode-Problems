@@ -1032,4 +1032,49 @@ public class DynamicProgramming {
         return dp[0][1];
     }
 
+    private int maxProfitMemoizationIII(int ind, int buy, int limit, int n, int[] prices, int[][][] dp) {
+        if (limit == 0) {
+            return 0;
+        }
+        if (ind == n) {
+            return 0;
+        }
+        if (dp[ind][buy][limit] != -1) {
+            return dp[ind][buy][limit];
+        }
+        int profit;
+        if (buy == 1) {
+            int take = -prices[ind] + maxProfitMemoizationIII(ind + 1, 0, limit, n, prices, dp);
+            int notTake = maxProfitMemoizationIII(ind + 1, 1, limit, n, prices, dp);
+            profit = Math.max(take, notTake);
+        } else {
+            int take = prices[ind] + maxProfitMemoizationIII(ind + 1, 1, limit - 1, n, prices, dp);
+            int notTake = maxProfitMemoizationIII(ind + 1, 0, limit, n, prices, dp);
+            profit = Math.max(take, notTake);
+        }
+        return dp[ind][buy][limit] = profit;
+    }
+
+    private int maxProfitTabulationIII(int n, int[] prices) {
+        int[][][] dp = new int[n + 1][2][3];
+        for (int ind = n - 1; ind >= 0; ind--) {
+            for (int buy = 0; buy <= 1; buy++) {
+                for (int limit = 1; limit <= 2; limit++) {
+                    int profit;
+                    if (buy == 0) {
+                        int take = -prices[ind] + dp[ind + 1][1][limit];
+                        int notTake = dp[ind + 1][0][limit];
+                        profit = Math.max(take, notTake);
+                    } else {
+                        int take = prices[ind] + dp[ind + 1][0][limit - 1];
+                        int notTake = dp[ind + 1][1][limit];
+                        profit = Math.max(take, notTake);
+                    }
+                    dp[ind][buy][limit] = profit;
+                }
+            }
+        }
+        return dp[0][0][2];
+    }
+
 }
