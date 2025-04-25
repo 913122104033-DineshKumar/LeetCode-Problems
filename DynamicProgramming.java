@@ -1232,4 +1232,32 @@ public class DynamicProgramming {
         return ans;
     }
 
+     public static int longestBitonicSequence(int[] arr, int n) {
+        int[] dp1 = new int[n];
+        dp1[0] = 1;
+        for (int ind = 1; ind < n; ind++) {
+            dp1[ind] = 1;
+            for (int prev = 0; prev < ind; prev++) {
+                if (arr[prev] < arr[ind]) {
+                    dp1[ind] = Math.max(dp1[ind], 1 + dp1[prev]);
+                }
+            }
+        }
+        int[] dp2 = new int[n];
+        dp2[n - 1] = 1;
+        for (int ind = n - 2; ind >= 0; ind--) {
+            dp2[ind] = 1;
+            for (int prev = n - 1; prev > ind; prev--) {
+                if (arr[prev] < arr[ind]) {
+                    dp2[ind] = Math.max(dp2[ind], 1 + dp2[prev]);
+                }
+            }
+        }
+        int ans = 1;
+        for (int ind = 0; ind < n; ind++) {
+            ans = Math.max(ans, dp2[ind] + dp1[ind] - 1);
+        }
+        return ans;
+    }
+
 }
