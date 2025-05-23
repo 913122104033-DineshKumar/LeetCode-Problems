@@ -1260,4 +1260,66 @@ public class DynamicProgramming {
         return ans;
     }
 
+    private int findMinSplit(int ind, String s, int[] dp) {
+        if (ind == s.length()) {
+            return 0;
+        }
+        int min = (int) 1e9;
+        for (int i = ind; i < s.length(); i++) {
+            if (isPalindrome(ind, i, s)) {
+                int cost = 1 + findMinSplit(i + 1, s, dp);
+                min = Math.min(min, cost);
+            }
+        }
+        return dp[ind] = min;
+    }
+
+    private static int noOfWays (int i, int j, int isTrue, String exp, int[][][] dp) {
+        if (i > j) {
+            return 0;
+        }
+        if (i == j) {
+            if (isTrue == 1) {
+                return exp.charAt(i) == 'T' ? 1: 0;
+            } 
+            return exp.charAt(i) == 'F' ? 1 : 0;
+        }
+        if (dp[i][j][isTrue] != -1) {
+            return dp[i][j][isTrue];
+        }
+        long ways = 0;
+        for (int ind = i + 1; ind <= j - 1; ind += 2) {
+            long lt = noOfWays(i, ind -1, 1, exp, dp);
+            long lf = noOfWays(i, ind -1, 0, exp, dp);
+            long rt = noOfWays(ind + 1, j, 1, exp, dp);
+            long rf = noOfWays(ind + 1, j, 0, exp, dp);
+            if (exp.charAt(ind) == '&') {
+                if (isTrue == 1) {
+                    ways = (ways + (lt * rt) % mod) % mod;
+                } else {
+                    ways = (ways + (lf * rt) % mod + 
+                    (lf * rf) % mod +
+                    (lt * rf) % mod) % mod;
+                }
+            } else if (exp.charAt(ind) == '^') {
+                if (isTrue == 1) {
+                    ways = (ways + (lt * rf) % mod + 
+                    (rt * lf) % mod) % mod;
+                } else {
+                    ways = (ways + (lt * rt) % mod + 
+                    (rf * lf) % mod) % mod;
+                }
+            } else {
+                if (isTrue == 1) {
+                    ways = (ways + (lt * rf) % mod + 
+                    (rt * lf) % mod + 
+                    (lt * rt) % mod) % mod;
+                } else {
+                    ways = (ways + (lf * rf) % mod) % mod;
+                }
+            }
+        }
+        return dp[i][j][isTrue] = (int) ways;
+    }
+
 }
