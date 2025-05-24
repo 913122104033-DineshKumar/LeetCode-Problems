@@ -1322,4 +1322,68 @@ public class DynamicProgramming {
         return dp[i][j][isTrue] = (int) ways;
     }
 
+    private int largestRectangleStack (int[] hist) {
+        Stack<Integer> st = new Stack<>();
+        int maxArea = 0;
+        for (int ind = 0; ind < hist.length; ind++) {
+            while (!st.isEmpty() && hist[st.peek()] > hist[ind]) {
+                int area = hist[st.pop()] * (ind - (st.isEmpty() ? -1 : st.peek()) - 1);
+                maxArea = Math.max(maxArea, area);
+            }
+            st.push(ind);
+        }
+        while (!st.isEmpty()) {
+            int area = hist[st.pop()] * (hist.length - (st.isEmpty() ? -1 : st.peek()) - 1);
+            maxArea = Math.max(maxArea, area);
+        }
+        return maxArea;
+    }
+
+    public int maximalRectangle(char[][] matrix) {
+        int[] hist = new int[matrix[0].length];
+        int ans = 0;
+        for (char[] mat : matrix) {
+            for (int ind = 0; ind < matrix[0].length; ind++) {
+                if (mat[ind] == '0') {
+                    hist[ind] = 0;
+                } else {
+                    hist[ind] += 1;
+                }
+            }
+            ans = Math.max(ans, largestRectangle(hist));
+        }
+        return ans;
+    }
+
+    public int countSquares(int[][] matrix) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+        int[][] dp = new int[n][m]; 
+        for (int ind = 0; ind < n; ind++) {
+            dp[ind][0] = matrix[ind][0];
+        }
+        for (int ind = 0; ind < m; ind++) {
+            dp[0][ind] = matrix[0][ind];
+        }
+        for (int row = 1; row < n; row++) {
+            for (int col = 1; col < m; col++) {
+                if (matrix[row][col] == 1) {
+                    int up = (row - 1 >= 0) ? dp[row - 1][col] : (int) 1e9;
+                    int left = (col - 1 >= 0) ? dp[row][col - 1] : (int) 1e9;
+                    int diagonal = (row - 1 >= 0 && col - 1 >= 0) ? dp[row - 1][col - 1] : (int) 1e9;
+                    dp[row][col] = Math.min(up, Math.min(left, diagonal)) + 1; 
+                } else {
+                    dp[row][col] = 0;
+                }
+            }
+        }
+        int ans = 0;
+        for (int[] row : dp) {
+            for (int c : row) {
+                ans += c;
+            }
+        }
+        return ans;
+    }
+
 }
